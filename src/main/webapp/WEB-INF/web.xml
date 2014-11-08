@@ -4,7 +4,7 @@
       http://java.sun.com/xml/ns/javaee
       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
 
-    <display-name>Spring Security REST Application</display-name>
+    <display-name>Potlatch REST API service</display-name>
 
     <!-- Spring root -->
     <context-param>
@@ -15,7 +15,7 @@
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>org.baeldung.spring</param-value>
+        <param-value>io.lucci.potlatch.spring</param-value>
     </context-param>
 
     <listener>

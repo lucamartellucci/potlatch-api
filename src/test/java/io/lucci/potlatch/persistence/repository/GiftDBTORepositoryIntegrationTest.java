@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import io.lucci.potlatch.persistence.PersistenceConfig;
 import io.lucci.potlatch.persistence.model.GiftDBTO;
+import io.lucci.potlatch.spring.PersistenceConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -33,7 +33,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindOne() throws Exception {
     	
-    	executeSqlScript("classpath:db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
     	GiftDBTO gift = repo.findOne(1L);
     	assertThat(gift,is(notNullValue()));
     	assertThat(gift.getTitle(), is(equalTo("title_1")));
@@ -51,7 +51,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindByUuid() throws Exception {
     	
-    	executeSqlScript("classpath:db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
     	GiftDBTO gift = repo.findByUuid("f6aa4067-5b21-4d98-b172-307b557187f0");
     	assertThat(gift,is(notNullValue()));
     	assertThat(gift.getTitle(), is(equalTo("title_1")));
@@ -69,7 +69,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 	@Test
 	public final void testFindAllByUserId() throws Exception {
 
-		executeSqlScript("classpath:db/gift.prepareDB.sql", false);
+		executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
 		final long userId = 1L;
 		List<GiftDBTO> gifts = repo.findAllByUserId(userId);
 		assertThat(gifts.size(), is(equalTo(3)));
@@ -88,7 +88,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindAllByUserIdPaged() throws Exception {
     	
-    	executeSqlScript("classpath:db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
     	final long userId = 1L;
     	PageRequest pageable = new PageRequest(0, 2);
 		Page<GiftDBTO> pagedGifts = repo.findAllByUserId(userId, pageable);

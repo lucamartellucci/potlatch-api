@@ -85,6 +85,7 @@ public class GiftDBTO {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	@Column(unique=true)
 	private String uuid;
 	
 	private String title;
@@ -115,13 +116,11 @@ public class GiftDBTO {
 	
 	@Transient
 	private Boolean reported;
+
 	
 	public GiftDBTO(){
 		
 	}
-	
-	
-
 	
 	public GiftDBTO(Long id, String uuid, String title, String description,
 			Date timestamp, Long parentId, String uri, String status,
@@ -140,9 +139,6 @@ public class GiftDBTO {
 		this.liked = liked;
 		this.reported = reported;
 	}
-
-
-
 
 	public Long getId() {
 		return id;

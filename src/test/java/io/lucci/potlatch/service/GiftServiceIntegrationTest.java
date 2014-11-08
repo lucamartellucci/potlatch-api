@@ -3,9 +3,10 @@ package io.lucci.potlatch.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import io.lucci.potlatch.persistence.PersistenceConfig;
-import io.lucci.potlatch.persistence.ServiceConfig;
-import io.lucci.potlatch.persistence.model.GiftDBTO;
+import static org.junit.Assert.fail;
+import io.lucci.potlatch.model.Gift;
+import io.lucci.potlatch.spring.PersistenceConfig;
+import io.lucci.potlatch.spring.ServiceConfig;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,12 +28,19 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
 
     @Test
     public final void testLikeGift() throws Exception {
-    	executeSqlScript("classpath:db/gift.prepareDB.sql", false);
-    	Long numberOfLikes = giftService.likeGift(3L, 1L);
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	Long numberOfLikes = giftService.likeGift("a6c1e839-d390-4b37-9837-dee63b3cffd9", 1L);
     	assertThat(numberOfLikes, is(equalTo(1L)));
     	
-    	GiftDBTO updatedGift = giftService.getGiftById(3L);
+    	Gift updatedGift = giftService.getGiftByUuid("a6c1e839-d390-4b37-9837-dee63b3cffd9");
     	assertThat(updatedGift.getNumberOfLikes(), is(equalTo(1L)));
+    }
+    
+    @Test(expected=GiftNotFoundExcetption.class)
+    public final void testLikeGiftThatNotExist() throws Exception {
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	giftService.likeGift("a6c1e839-d390-4b37-9837-dee63b3cffd1", 1L);
+    	fail("Should throw a GiftNotFoundException");
     }
 
 }

@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `potlatch`.`gift` (
   `uri` VARCHAR(300) NULL,
   `user_id` BIGINT NOT NULL,
   `status` VARCHAR(45) NOT NULL,
+  `number_of_likes` VARCHAR(45) NULL,  
   PRIMARY KEY (`id`),
   INDEX `fk_gift_1_idx` (`user_id` ASC),
   CONSTRAINT `fk_gift_1`
@@ -121,8 +122,8 @@ CREATE TABLE IF NOT EXISTS `potlatch`.`likes_by_gifts` (`gift_id` INT, `user_id`
 DROP VIEW IF EXISTS `potlatch`.`likes_by_gifts` ;
 DROP TABLE IF EXISTS `potlatch`.`likes_by_gifts`;
 USE `potlatch`;
-CREATE  OR REPLACE VIEW `likes_by_gifts` AS SELECT g.id as gift_id, g.user_id, sum(ua.like) as number_of_likes FROM potlatch.user_action ua 
-inner join potlatch.gift g on ua.gift_id = g.id where ua.like = 1 group by g.id;
+CREATE  OR REPLACE VIEW `likes_by_gifts` AS SELECT g.id as gift_id, g.user_id, sum(ua.i_like_it) as number_of_likes FROM potlatch.user_action ua 
+inner join potlatch.gift g on ua.gift_id = g.id where ua.i_like_it = 1 group by g.id;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

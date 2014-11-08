@@ -1,4 +1,4 @@
-package io.lucci.potlatch.persistence;
+package io.lucci.potlatch.spring;
 
 import java.util.Properties;
 
@@ -37,7 +37,8 @@ public class PersistenceConfig {
 
     @Configuration
     @Profile("db-test-mysql")
-    @PropertySource({"classpath:persistence-test-mysql.properties"})
+//    @PropertySource({"classpath:persistence-test-mysql.properties"})
+    @PropertySource({"file:src/test/resource/persistence-test-mysql.properties"})
     static class DbTestProperties
     { }
 

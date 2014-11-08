@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import io.lucci.potlatch.persistence.PersistenceConfig;
 import io.lucci.potlatch.persistence.model.UserDBTO;
+import io.lucci.potlatch.spring.PersistenceConfig;
 
 import java.text.SimpleDateFormat;
 
@@ -30,7 +30,7 @@ public class UserDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindOne() throws Exception {
     	
-    	executeSqlScript("classpath:db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
     	UserDBTO user = repo.findOne(1L);
     	assertThat(user,is(notNullValue()));
     	assertThat(user.getEmail(),is(equalTo("luca.martellucci@gmail.com")));
