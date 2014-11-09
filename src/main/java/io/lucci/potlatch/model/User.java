@@ -1,21 +1,27 @@
 package io.lucci.potlatch.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
-public class User implements Serializable {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+public class User implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String email;
-	private String name;
+	private String username;
 	private String password;
 	private Date birthdate;
 	private String gender;
 	private Boolean blockInappropriate;
 	private Long refreshInterval;
 	private Long numberOflikes;
+	private Collection<SimpleGrantedAuthority> authorities;
 	
 	public Long getId() {
 		return id;
@@ -29,12 +35,14 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getName() {
-		return name;
+	@Override
+	public String getUsername() {
+		return username;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String name) {
+		this.username = name;
 	}
+	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -71,6 +79,31 @@ public class User implements Serializable {
 	public void setNumberOflikes(Long numberOflikes) {
 		this.numberOflikes = numberOflikes;
 	}
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
+	public void setAuthorities(Collection<SimpleGrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -79,7 +112,7 @@ public class User implements Serializable {
 		builder.append(", email=");
 		builder.append(email);
 		builder.append(", name=");
-		builder.append(name);
+		builder.append(username);
 		builder.append(", password=");
 		builder.append(password);
 		builder.append(", birthdate=");
@@ -95,5 +128,6 @@ public class User implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+	
 	
 }

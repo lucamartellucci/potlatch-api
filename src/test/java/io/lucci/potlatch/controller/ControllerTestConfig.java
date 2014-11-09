@@ -1,8 +1,12 @@
-package io.lucci.potlatch.spring;
+package io.lucci.potlatch.controller;
+
+import io.lucci.potlatch.service.GiftService;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.mockito.Mockito;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -16,15 +20,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@ComponentScan("io.lucci.potlatch.controller")
 @EnableWebMvc
-public class WebConfig extends WebMvcConfigurerAdapter {
-
-    public WebConfig() {
-        super();
+@ComponentScan ( "io.lucci.potlatch.controller" )
+public class ControllerTestConfig extends WebMvcConfigurerAdapter {
+	
+	@Bean
+    public GiftService ecosystemInstanceService() {
+        return Mockito.mock( GiftService.class );
     }
-
-    @Override
+	
+	@Override
     public void configureMessageConverters( final List<HttpMessageConverter<?>> converters ) {
 
         final ByteArrayHttpMessageConverter byteArrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
@@ -41,5 +46,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         super.configureMessageConverters( converters );
     }
+	
 
 }

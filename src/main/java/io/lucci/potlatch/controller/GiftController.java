@@ -27,8 +27,7 @@ public class GiftController {
 	
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public Gift findById(@PathVariable("id") final String id, final HttpServletResponse response) {
+    public @ResponseBody Gift findById(@PathVariable("id") final String id, final HttpServletResponse response) {
     	try {
     		
         	logger.info("Searching gift with id {}", id);

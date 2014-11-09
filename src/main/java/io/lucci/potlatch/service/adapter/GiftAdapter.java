@@ -15,7 +15,11 @@ public class GiftAdapter {
 
 	public Gift dbtoToTo(GiftDBTO giftDBTO, boolean adaptUser) {
 		Gift gift = new Gift();
-		BeanUtils.copyProperties(giftDBTO, gift, "user");
+		BeanUtils.copyProperties(giftDBTO, gift, "user", "chainMaster", "likedByMe", "reportedByMe");
+		gift.setChainMaster(giftDBTO.getParentId() == null ? Boolean.TRUE: Boolean.FALSE);
+		gift.setLikedByMe(giftDBTO.getLiked());
+		gift.setReportedByMe(giftDBTO.getReported());
+		
 		if (adaptUser) {
 			gift.setUser(userAdapter.dbtoToTo(giftDBTO.getUser()));
 		}
