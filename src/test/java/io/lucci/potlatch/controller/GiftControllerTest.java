@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import io.lucci.potlatch.model.Gift;
+import io.lucci.potlatch.model.GiftBuilder;
 import io.lucci.potlatch.service.GiftService;
 
 import org.junit.Before;
@@ -41,8 +42,7 @@ public class GiftControllerTest {
     @Test
     public void findByIdTest() throws Exception {
     	
-    	Gift gift = new Gift();
-    	gift.setUuid("1");
+    	Gift gift = GiftBuilder.gift().withUuid("1").build();
 		Mockito.when(giftService.getGiftByUuid("1")).thenReturn(gift);
     	
         this.mockMvc.perform( get( "/gift/1" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
