@@ -13,11 +13,15 @@ DROP TABLE IF EXISTS `potlatch`.`user` ;
 CREATE TABLE IF NOT EXISTS `potlatch`.`user` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(100) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
   `birthdate` DATE NULL,
   `gender` CHAR NULL,
-  PRIMARY KEY (`id`))
+  `block_inappropriate` TINYINT(1) NULL,
+  `refresh_interval` BIGINT NULL,  
+  `roles` VARCHAR(255) NULL,  
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ix_username` (`username`))
 ENGINE = InnoDB
 COMMENT = 'Represents the user of the potlatch application';
 
@@ -37,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `potlatch`.`gift` (
   `uri` VARCHAR(300) NULL,
   `user_id` BIGINT NOT NULL,
   `status` VARCHAR(45) NOT NULL,
-  `number_of_likes` VARCHAR(45) NULL,  
+  `number_of_likes` BIGINT NULL,  
   PRIMARY KEY (`id`),
   INDEX `fk_gift_1_idx` (`user_id` ASC),
   CONSTRAINT `fk_gift_1`

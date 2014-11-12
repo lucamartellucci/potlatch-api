@@ -1,14 +1,9 @@
 package io.lucci.potlatch.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-public class User implements Serializable, UserDetails {
+public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,7 +16,6 @@ public class User implements Serializable, UserDetails {
 	private Boolean blockInappropriate;
 	private Long refreshInterval;
 	private Long numberOflikes;
-	private Collection<SimpleGrantedAuthority> authorities;
 	
 	public Long getId() {
 		return id;
@@ -35,14 +29,12 @@ public class User implements Serializable, UserDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	@Override
 	public String getUsername() {
 		return username;
 	}
 	public void setUsername(String name) {
 		this.username = name;
 	}
-	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -80,29 +72,6 @@ public class User implements Serializable, UserDetails {
 		this.numberOflikes = numberOflikes;
 	}
 	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-	public void setAuthorities(Collection<SimpleGrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
 	
 	@Override
 	public String toString() {

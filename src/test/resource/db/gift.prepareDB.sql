@@ -1,5 +1,5 @@
-INSERT INTO user(id,email,name,password,birthdate,gender) values (1,'luca.martellucci@gmail.com', 'luca', 'password01', '1978-09-25', 'M');
-INSERT INTO user(id,email,name,password,birthdate,gender) values (2,'erica.cassina@gmail.com', 'erica', 'password01', '1982-03-02', 'F');
+INSERT INTO user(id,email,username,password,birthdate,gender,block_inappropriate,refresh_interval,roles) values (1,'luca.martellucci@gmail.com', 'luca', 'password01', '1978-09-25', 'M', 1, 60, 'ADMIN,USER' );
+INSERT INTO user(id,email,username,password,birthdate,gender,block_inappropriate,refresh_interval,roles) values (2,'erica.cassina@gmail.com', 'erica', 'password01', '1982-03-02', 'F', null, 30, 'ADMIN,USER');
 
 INSERT INTO gift(id,uuid,title,description,timestamp,parent_id,uri,user_id,status,number_of_likes) values (1,'f6aa4067-5b21-4d98-b172-307b557187f0','title_1','description_1',CURRENT_TIMESTAMP,NULL,'http://www.url1.it',1,'active',2);
 INSERT INTO gift(id,uuid,title,description,timestamp,parent_id,uri,user_id,status) values (2,'7cfa9ed8-5bd8-493f-9528-c45f8176103c','title_2','description_2',CURRENT_TIMESTAMP,NULL,'http://www.url2.it',1,'active');

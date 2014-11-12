@@ -7,10 +7,7 @@
 
 package io.lucci.potlatch.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class UserBuilder extends UserBuilderBase<UserBuilder> {
 	public static UserBuilder user() {
@@ -96,25 +93,6 @@ class UserBuilderBase<GeneratorT extends UserBuilderBase<GeneratorT>> {
 	@SuppressWarnings("unchecked")
 	public GeneratorT withNumberOflikes(Long aValue) {
 		instance.setNumberOflikes(aValue);
-
-		return (GeneratorT) this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public GeneratorT withAuthorities(Collection<SimpleGrantedAuthority> aValue) {
-		instance.setAuthorities(aValue);
-
-		return (GeneratorT) this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public GeneratorT withAddedAuthority(SimpleGrantedAuthority aValue) {
-		if (instance.getAuthorities() == null) {
-			instance.setAuthorities(new ArrayList<SimpleGrantedAuthority>());
-		}
-
-		((ArrayList<SimpleGrantedAuthority>) instance.getAuthorities())
-				.add(aValue);
 
 		return (GeneratorT) this;
 	}

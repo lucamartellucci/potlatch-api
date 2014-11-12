@@ -12,10 +12,10 @@ public class UserActionDBTO {
 	@EmbeddedId
 	private UserActionIdDBTO id;
 	
-	@Column(name="i_like_it", columnDefinition = "TINYINT(1)", nullable=true)
+	@Column(name="i_like_it", columnDefinition = "TINYINT", length=1, nullable=true)
 	private Boolean like;
 	
-	@Column(columnDefinition = "TINYINT(1)", nullable=true)
+	@Column(columnDefinition = "TINYINT", length=1, nullable=true)
 	private Boolean inappropriate;
 
 	public UserActionDBTO(){

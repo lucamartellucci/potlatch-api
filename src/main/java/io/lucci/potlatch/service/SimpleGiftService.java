@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SimpleGiftService implements GiftService {
@@ -68,8 +69,8 @@ public class SimpleGiftService implements GiftService {
 		return null;
 	}
 
-	@Override
-	public Gift getGiftByUuid(String uuid) throws GiftServiceException {
+	
+	@Transactional @Override public Gift getGiftByUuid(String uuid) throws GiftServiceException {
 		GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
 		Gift gift = giftAdapter.dbtoToTo(giftDBTO, true);
 		return gift;

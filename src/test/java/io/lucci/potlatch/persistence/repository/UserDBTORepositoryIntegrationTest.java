@@ -34,11 +34,31 @@ public class UserDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     	UserDBTO user = repo.findOne(1L);
     	assertThat(user,is(notNullValue()));
     	assertThat(user.getEmail(),is(equalTo("luca.martellucci@gmail.com")));
-    	assertThat(user.getName(),is(equalTo("luca")));
+    	assertThat(user.getUsername(),is(equalTo("luca")));
     	assertThat(user.getGender(),is(equalTo("M")));
     	assertThat(user.getPassword(),is(equalTo("password01")));
 		assertThat(new SimpleDateFormat("dd/MM/yyyy").format(user.getBirthdate()),is(equalTo("25/09/1978")));
+		assertThat(user.getBlockInappropriate(),is(equalTo(Boolean.TRUE)));
+		assertThat(user.getRefreshInterval(),is(equalTo(60L)));
 		assertThat(user.getGifts().size(),is(equalTo(3)));
+		assertThat(user.getRoles(),is(equalTo("ADMIN,USER")));
+    }
+    
+    @Test
+    public final void testFindByUsername() throws Exception {
+    	
+    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	UserDBTO user = repo.findByUsername("luca");
+    	assertThat(user,is(notNullValue()));
+    	assertThat(user.getEmail(),is(equalTo("luca.martellucci@gmail.com")));
+    	assertThat(user.getUsername(),is(equalTo("luca")));
+    	assertThat(user.getGender(),is(equalTo("M")));
+    	assertThat(user.getPassword(),is(equalTo("password01")));
+		assertThat(new SimpleDateFormat("dd/MM/yyyy").format(user.getBirthdate()),is(equalTo("25/09/1978")));
+		assertThat(user.getBlockInappropriate(),is(equalTo(Boolean.TRUE)));
+		assertThat(user.getRefreshInterval(),is(equalTo(60L)));
+		assertThat(user.getGifts().size(),is(equalTo(3)));
+		assertThat(user.getRoles(),is(equalTo("ADMIN,USER")));
     	
     }
 

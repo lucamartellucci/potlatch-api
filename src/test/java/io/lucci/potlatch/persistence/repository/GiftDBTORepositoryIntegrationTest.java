@@ -41,7 +41,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     	assertThat(gift.getStatus(), is(equalTo("active")));
     	assertThat(gift.getUser(),is(notNullValue()));
     	assertThat(gift.getUser().getEmail(),is("luca.martellucci@gmail.com"));
-    	assertThat(gift.getUser().getName(),is("luca"));
+    	assertThat(gift.getUser().getUsername(),is("luca"));
 		assertThat(new SimpleDateFormat("dd/MM/yyyy").format(gift.getUser().getBirthdate()),is("25/09/1978"));
 		
 		logger.info("{}", gift.getUserActions());
@@ -59,7 +59,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     	assertThat(gift.getStatus(), is(equalTo("active")));
     	assertThat(gift.getUser(),is(notNullValue()));
     	assertThat(gift.getUser().getEmail(),is("luca.martellucci@gmail.com"));
-    	assertThat(gift.getUser().getName(),is("luca"));
+    	assertThat(gift.getUser().getUsername(),is("luca"));
 		assertThat(new SimpleDateFormat("dd/MM/yyyy").format(gift.getUser().getBirthdate()),is("25/09/1978"));
 		
 		logger.info("{}", gift.getUserActions());

@@ -23,7 +23,8 @@ public class UserDBTO {
 	
 	private String email;
 	
-	private String name;
+	@Column(unique=true)
+	private String username;
 	
 	private String password;
 	
@@ -32,7 +33,7 @@ public class UserDBTO {
 	@Column(columnDefinition="char")
 	private String gender;
 	
-	@Column(name="block_inappropriate")
+	@Column(name="block_inappropriate", columnDefinition = "TINYINT", length=1, nullable=true)
 	private Boolean blockInappropriate;
 	
 	@Column(name="refresh_interval")
@@ -40,6 +41,9 @@ public class UserDBTO {
 	
 	@OneToMany(mappedBy="user", cascade = { CascadeType.ALL, CascadeType.REMOVE }, orphanRemoval = true, fetch=FetchType.LAZY)
 	private List<GiftDBTO> gifts;
+	
+	private String roles;
+
 
 	public Long getId() {
 		return id;
@@ -57,12 +61,12 @@ public class UserDBTO {
 		this.email = email;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -113,6 +117,14 @@ public class UserDBTO {
 		this.refreshInterval = refreshInterval;
 	}
 
+	public String getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -120,8 +132,8 @@ public class UserDBTO {
 		builder.append(id);
 		builder.append(", email=");
 		builder.append(email);
-		builder.append(", name=");
-		builder.append(name);
+		builder.append(", username=");
+		builder.append(username);
 		builder.append(", password=");
 		builder.append(password);
 		builder.append(", birthdate=");
@@ -134,9 +146,10 @@ public class UserDBTO {
 		builder.append(refreshInterval);
 		builder.append(", gifts=");
 		builder.append(gifts);
+		builder.append(", roles=");
+		builder.append(roles);
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
+
 }

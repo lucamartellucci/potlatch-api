@@ -5,6 +5,7 @@
       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
 
     <display-name>Potlatch REST API service</display-name>
+    
 
     <!-- Spring root -->
     <context-param>
@@ -22,15 +23,6 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <filter>
-        <filter-name>etagFilter</filter-name>
-        <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>etagFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <!-- Spring child -->
     <servlet>
         <servlet-name>api</servlet-name>
@@ -42,15 +34,6 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <!-- Spring Security -->
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
