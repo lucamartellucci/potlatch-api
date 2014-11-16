@@ -2,7 +2,7 @@ package io.lucci.potlatch.service.adapter;
 
 import io.lucci.potlatch.model.User;
 import io.lucci.potlatch.persistence.model.UserDBTO;
-import io.lucci.potlatch.security.SimpleUserDetail;
+import io.lucci.potlatch.security.SimpleUserDetails;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class UserAdapter {
 	}
 
 	public UserDetails dbtoToUserDetails(UserDBTO userDBTO) {
-		return new SimpleUserDetail(userDBTO);
+		return new SimpleUserDetails(dbtoToTo(userDBTO));
 	}
 
 }

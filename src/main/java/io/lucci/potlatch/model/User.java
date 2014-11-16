@@ -16,6 +16,7 @@ public class User implements Serializable {
 	private Boolean blockInappropriate;
 	private Long refreshInterval;
 	private Long numberOflikes;
+	private String roles;
 	
 	public Long getId() {
 		return id;
@@ -71,8 +72,12 @@ public class User implements Serializable {
 	public void setNumberOflikes(Long numberOflikes) {
 		this.numberOflikes = numberOflikes;
 	}
-	
-	
+	public String getRoles() {
+		return roles;
+	}
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -80,7 +85,7 @@ public class User implements Serializable {
 		builder.append(id);
 		builder.append(", email=");
 		builder.append(email);
-		builder.append(", name=");
+		builder.append(", username=");
 		builder.append(username);
 		builder.append(", password=");
 		builder.append(password);
@@ -94,9 +99,9 @@ public class User implements Serializable {
 		builder.append(refreshInterval);
 		builder.append(", numberOflikes=");
 		builder.append(numberOflikes);
+		builder.append(", roles=");
+		builder.append(roles);
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
 }

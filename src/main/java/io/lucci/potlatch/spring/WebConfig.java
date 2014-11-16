@@ -1,5 +1,7 @@
 package io.lucci.potlatch.spring;
 
+import io.lucci.potlatch.security.UserArgumentResolver;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -22,6 +25,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     public WebConfig() {
         super();
+    }
+    
+    @Override
+    public void addArgumentResolvers(List< HandlerMethodArgumentResolver > argumentResolvers) {
+    	UserArgumentResolver personResolver = new UserArgumentResolver();
+    	argumentResolvers.add(personResolver);
     }
 
     @Override

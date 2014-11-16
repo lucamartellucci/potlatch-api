@@ -144,8 +144,6 @@ public class UserDBTO {
 		builder.append(blockInappropriate);
 		builder.append(", refreshInterval=");
 		builder.append(refreshInterval);
-		builder.append(", gifts=");
-		builder.append(gifts);
 		builder.append(", roles=");
 		builder.append(roles);
 		builder.append("]");

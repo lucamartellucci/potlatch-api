@@ -1,6 +1,8 @@
 package io.lucci.potlatch.controller;
 
 import io.lucci.potlatch.model.Gift;
+import io.lucci.potlatch.model.User;
+import io.lucci.potlatch.security.CurrentUser;
 import io.lucci.potlatch.service.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.GiftService;
 import io.lucci.potlatch.service.GiftServiceException;
@@ -27,8 +29,11 @@ public class GiftController {
 	
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public @ResponseBody Gift findById(@PathVariable("id") final String id, final HttpServletResponse response) {
-    	try {
+    public @ResponseBody Gift findById(@PathVariable("id") final String id, final HttpServletResponse response, @CurrentUser User user) {
+    	try { 	
+    		if (user != null) {
+    			logger.info("Current user is: {}", user);
+    		}
     		
         	logger.info("Searching gift with id {}", id);
 			Gift gift = giftService.getGiftByUuid(id);
