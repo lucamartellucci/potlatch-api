@@ -20,7 +20,13 @@ public interface GiftDBTORepository extends JpaRepository<GiftDBTO, Long>, JpaSp
 	@Query(name = "Gift.findAllByUserId")
     List<GiftDBTO> findAllByUserId(Long userId);
 
-    @Query(countName = "Gift.countElements", name = "Gift.findAllByUserId")
+    @Query(name = "Gift.findAllByUserId", countName = "Gift.countElements")
 	Page<GiftDBTO> findAllByUserId(Long userId, Pageable pageable);
+    
+	@Query(name = "Gift.findAllByUserIdFilterInappropriate")
+    List<GiftDBTO> findAllByUserIdFilterInappropriate(Long userId);
+
+    @Query(name = "Gift.findAllByUserIdFilterInappropriate", countName = "Gift.countElementsFilterInappropriate")
+	Page<GiftDBTO> findAllByUserIdFilterInappropriate(Long userId, Pageable pageable);
 	
 }

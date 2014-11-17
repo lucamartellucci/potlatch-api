@@ -26,21 +26,21 @@ import com.google.common.base.Preconditions;
 @EnableTransactionManagement
 @ComponentScan({ "io.lucci.potlatch.persistence" })
 @EnableJpaRepositories(basePackages = "io.lucci.potlatch.persistence.repository")
-@PropertySource("classpath:persistence-mysql.properties")
+//@PropertySource("classpath:persistence-mysql.properties")
 public class PersistenceConfig {
 	
 	
-//    @Configuration
-//    @Profile("db-production")
-//    @PropertySource("classpath:persistence-mysql.properties")
-//    static class DbProductionProperties
-//    { }
-//
-//    @Configuration
-//    @Profile("db-test-mysql")
-//    @PropertySource({"file:src/test/resource/persistence-test-mysql.properties"})
-//    static class DbTestProperties
-//    { }
+    @Configuration
+    @Profile("db-production")
+    @PropertySource("classpath:persistence-mysql.properties")
+    static class DbProductionProperties
+    { }
+
+    @Configuration
+    @Profile("db-test-mysql")
+    @PropertySource({"file:src/test/resource/persistence-test-mysql.properties"})
+    static class DbTestProperties
+    { }
 
     @Autowired
     private Environment env;

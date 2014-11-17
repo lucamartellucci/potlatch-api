@@ -1,8 +1,7 @@
 package io.lucci.potlatch.service;
 
-import java.util.List;
-
 import io.lucci.potlatch.model.Gift;
+import io.lucci.potlatch.model.User;
 import io.lucci.potlatch.persistence.model.GiftDBTO;
 import io.lucci.potlatch.persistence.model.UserActionDBTO;
 import io.lucci.potlatch.persistence.model.UserActionIdDBTO;
@@ -10,9 +9,12 @@ import io.lucci.potlatch.persistence.repository.GiftDBTORepository;
 import io.lucci.potlatch.persistence.repository.UserActionDBTORepository;
 import io.lucci.potlatch.service.adapter.GiftAdapter;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,46 @@ public class SimpleGiftService implements GiftService {
 	
 	@Autowired
 	private GiftAdapter giftAdapter;
+
+	@Transactional @Override public Gift getGiftByUuid(String uuid) throws GiftServiceException {
+		GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
+		Gift gift = giftAdapter.dbtoToTo(giftDBTO, true);
+		return gift;
+	}
+
+
+
+	@Override
+	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException {
+		try {
+			logger.info("Loading gifts for user []", user.getId());
+			logger.info("Block inappropriate []", user.getBlockInappropriate());
+			List<GiftDBTO> gifts = null;
+			if (p != null) {
+				Page<GiftDBTO> page = null;
+				logger.info("Loading page [], with size []", p.getPageNumber(), p.getPageSize());
+				if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
+					page = giftRepository.findAllByUserIdFilterInappropriate(user.getId(),p);
+				} else {
+					page = giftRepository.findAllByUserId(user.getId(), p);
+				}
+				gifts = page.getContent();
+			} else {
+				
+				logger.info("Loading full list");
+				if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
+					gifts = giftRepository.findAllByUserIdFilterInappropriate(user.getId());
+				} else {
+					gifts = giftRepository.findAllByUserId(user.getId());
+				}
+			}
+			return giftAdapter.dbtoToTo(gifts, false);
+		} catch (Exception e) {
+			throw new GiftServiceException(new StringBuilder("Unable to retrieve gifts for user [").append(user.getId()).append("]").toString(),e);
+		}
+	}
+
+
 
 	@Override
 	public Long likeGift(String uuid, Long userId) throws GiftServiceException, GiftNotFoundExcetption {
@@ -61,28 +103,13 @@ public class SimpleGiftService implements GiftService {
 		}
 	}
 
-	
-
 	@Override
 	public Long unlikeGift(String uuid, Long userId) throws GiftServiceException, GiftNotFoundExcetption {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
-	@Transactional @Override public Gift getGiftByUuid(String uuid) throws GiftServiceException {
-		GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
-		Gift gift = giftAdapter.dbtoToTo(giftDBTO, true);
-		return gift;
-	}
 
-	@Override
-	public List<Gift> findAllGifts(Long userId, Pageable p, Boolean filterInappropriate) throws GiftServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
 	
 	
 	private Long incrementGiftPrefCounter(GiftDBTO giftDBTO) {

@@ -7,11 +7,14 @@ import io.lucci.potlatch.service.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.GiftService;
 import io.lucci.potlatch.service.GiftServiceException;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,13 +32,10 @@ public class GiftController {
 	
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public @ResponseBody Gift findById(@PathVariable("id") final String id, final HttpServletResponse response, @CurrentUser User user) {
+    public @ResponseBody Gift findById(@PathVariable("id") final String id) {
     	try { 	
-    		if (user != null) {
-    			logger.info("Current user is: {}", user);
-    		}
-    		
-        	logger.info("Searching gift with id {}", id);
+
+    		logger.info("Searching gift with id [{}]", id);
 			Gift gift = giftService.getGiftByUuid(id);
 			logger.info("Found gift {}", gift);
 			return gift;
@@ -45,5 +45,20 @@ public class GiftController {
 		} catch (GiftNotFoundExcetption e) {
 			return null;
 		}
+    }
+    
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public @ResponseBody List<Gift> retrieveGifts(final HttpServletResponse response, @CurrentUser User user, Pageable p) {
+    	try {
+
+    		logger.info("Retrieve gifts for user [{}]", user.getUsername());
+    		List<Gift> gifts = giftService.findAllGifts(user, p);
+    		logger.info("Found [{}] gifts", gifts.size());
+    		return gifts;
+    		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+    	return null;
     }
 }

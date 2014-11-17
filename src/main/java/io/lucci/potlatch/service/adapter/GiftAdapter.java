@@ -1,5 +1,8 @@
 package io.lucci.potlatch.service.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.lucci.potlatch.model.Gift;
 import io.lucci.potlatch.persistence.model.GiftDBTO;
 
@@ -24,6 +27,17 @@ public class GiftAdapter {
 			gift.setUser(userAdapter.dbtoToTo(giftDBTO.getUser()));
 		}
 		return gift;
+	}
+
+	public List<Gift> dbtoToTo(List<GiftDBTO> giftDBTOList, boolean adaptUser) {
+		if (giftDBTOList == null) {
+			return null;
+		}
+		List<Gift> gifts = new ArrayList<>();
+		for (GiftDBTO giftDBTO : giftDBTOList) {
+			gifts.add(dbtoToTo(giftDBTO, adaptUser));
+		}
+		return gifts;
 	}
 
 }

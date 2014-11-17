@@ -26,28 +26,24 @@ import javax.persistence.Transient;
 @NamedNativeQueries(
 	{
 		@NamedNativeQuery(
-			resultSetMapping="giftExtended", 
-			query="select "
-					+ "g.id, g.uuid, "
-					+ "g.title, "
-					+ "g.description, "
-					+ "g.timestamp, "
-					+ "g.parent_id, "
-					+ "g.uri, g.status, "
-					+ "g.number_of_likes, "
-					+ "g.user_id, "
-					+ "ua.i_like_it, "
-					+ "ua.inappropriate "
-					+ "from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 "
-					+ "where g.parent_id is null "
-					+ "order by g.timestamp desc", 
-			name="Gift.findAllByUserId"
-		)
-		,
+			name="Gift.findAllByUserId",
+			query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null order by g.timestamp desc", 
+			resultSetMapping="giftExtended"
+		),
+		@NamedNativeQuery(
+				name="Gift.findAllByUserIdFilterInappropriate",
+				query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
+				resultSetMapping="giftExtended"
+		),
 		@NamedNativeQuery(
 				name="Gift.countElements",
-				resultSetMapping="giftCount",
-				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null"
+				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null",
+				resultSetMapping="giftCount"
+		),
+		@NamedNativeQuery(
+				name="Gift.countElementsFilterInappropriate",
+				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1)",
+				resultSetMapping="giftCount"
 		)
 	}
 )

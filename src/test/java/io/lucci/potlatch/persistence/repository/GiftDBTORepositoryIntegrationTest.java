@@ -81,8 +81,23 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 		GiftDBTO gift1 = gifts.get(0);
 		assertThat(gift1.getId(), is(equalTo(1L)));
 		assertThat(gift1.getLiked(), is(equalTo(Boolean.TRUE)));
+	}
+	
+	@Test
+	public final void testFindAllByUserIdFilterInappropriate() throws Exception {
 
+		executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+		final long userId = 1L;
+		List<GiftDBTO> gifts = repo.findAllByUserIdFilterInappropriate(userId);
+		assertThat(gifts.size(), is(equalTo(2)));
 
+		for (GiftDBTO gift : gifts) {
+			logger.info("Gift is: {}", gift);
+		}
+		
+		GiftDBTO gift1 = gifts.get(0);
+		assertThat(gift1.getId(), is(equalTo(1L)));
+		assertThat(gift1.getLiked(), is(equalTo(Boolean.TRUE)));
 	}
     
     @Test

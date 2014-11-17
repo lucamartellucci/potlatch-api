@@ -1,5 +1,6 @@
 package io.lucci.potlatch.service;
 import io.lucci.potlatch.model.Gift;
+import io.lucci.potlatch.model.User;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface GiftService {
 
 	public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption;
 	
-	public List<Gift> findAllGifts(Long userId, Pageable p, Boolean filterInappropriate) throws GiftServiceException;
+	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException;
 
 }
