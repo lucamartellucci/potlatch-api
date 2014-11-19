@@ -1,11 +1,13 @@
 package io.lucci.potlatch.controller;
 
+import io.lucci.potlatch.controller.exception.ResourceNotFoundException;
+import io.lucci.potlatch.controller.resolver.CurrentUser;
+import io.lucci.potlatch.controller.resolver.PageReq;
 import io.lucci.potlatch.model.Gift;
 import io.lucci.potlatch.model.User;
-import io.lucci.potlatch.security.CurrentUser;
-import io.lucci.potlatch.service.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.GiftService;
-import io.lucci.potlatch.service.GiftServiceException;
+import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
+import io.lucci.potlatch.service.exception.GiftServiceException;
 
 import java.util.List;
 
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value = "/gift")
 public class GiftController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GiftController.class);
@@ -31,8 +32,8 @@ public class GiftController {
 	private GiftService giftService;
 	
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public @ResponseBody Gift findById(@PathVariable("id") final String id) {
+    @RequestMapping(value = "/gift/{id}", method = RequestMethod.GET)
+    public @ResponseBody Gift findById(@PathVariable("id") final String id) throws ResourceNotFoundException {
     	try { 	
 
     		logger.info("Searching gift with id [{}]", id);
@@ -41,14 +42,16 @@ public class GiftController {
 			return gift;
 			
 		} catch (GiftServiceException e) {
-			return null;
+			logger.error("Unable to find the gift", e);
+			throw new RuntimeException();
 		} catch (GiftNotFoundExcetption e) {
-			return null;
+			logger.error("Unable to find the gift", e);
+			throw new ResourceNotFoundException();
 		}
     }
     
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public @ResponseBody List<Gift> retrieveGifts(final HttpServletResponse response, @CurrentUser User user, Pageable p) {
+    @RequestMapping(value = "/gift", method = RequestMethod.GET)
+    public @ResponseBody List<Gift> retrieveGifts(@CurrentUser User user, @PageReq Pageable p) {
     	try {
 
     		logger.info("Retrieve gifts for user [{}]", user.getUsername());
@@ -57,8 +60,20 @@ public class GiftController {
     		return gifts;
     		
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.error("Unable load the gifts", e);
+			throw new RuntimeException(e);
 		}
-    	return null;
+    }
+    
+    @RequestMapping(value = "/gift", method = RequestMethod.POST)
+    public @ResponseBody Gift createGift(Gift gift, @CurrentUser User user) {
+    	try {
+    		Gift createdGift = giftService.createGift(gift);
+    		return createdGift;
+		} catch (Exception e) {
+			logger.error("Unable to create the gift", e);
+			throw new RuntimeException();
+		}
+    	
     }
 }

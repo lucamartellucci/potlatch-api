@@ -1,5 +1,6 @@
 package io.lucci.potlatch;
 
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -10,11 +11,15 @@ import io.lucci.potlatch.model.Gift;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import retrofit.RetrofitError;
 
 public class GiftLiveTest {
 	
@@ -73,5 +78,39 @@ public class GiftLiveTest {
 		assertThat(gift.getTitle(), is(equalTo("title_1")));
 		assertThat(gift.getUri(), is(equalTo("http://www.url1.it")));
 		assertThat(gift.getUser().getId(), is(equalTo(1L)));
+	}
+	
+	@Test
+	public void testRetrieveNotExistingGiftByIdWithAuth() throws Exception {
+		try {
+			securedGiftApi.getGiftById("not_exist_gift_id");
+		} catch (RetrofitError error) {
+			assertThat(error.getResponse().getStatus(), is(equalTo(HttpStatus.SC_NOT_FOUND)));
+		}
+	}
+	
+	@Test
+	public void testRetrieveGiftsWithAuth() throws Exception {
+		List<Gift> gifts = securedGiftApi.getGifts();
+		assertThat(gifts.size(), is(equalTo(2)));
+		for (Gift gift : gifts) {
+			assertThat(gift.getUuid(), is(anyOf(
+					equalTo("f6aa4067-5b21-4d98-b172-307b557187f0"), 
+					equalTo("5a4dcd02-1e6d-4c4d-a3a0-2e28cb631d21")
+				)));
+		}
+	}
+	
+	@Test
+	public void testRetrievePagedGiftsWithAuth() throws Exception {
+		Integer pageNumber = 0;
+		Integer pageSize = 1;
+		List<Gift> gifts = securedGiftApi.getGifts(pageNumber, pageSize);
+		assertThat(gifts.size(), is(equalTo(1)));
+		assertThat(gifts.get(0).getUuid(), is(equalTo("f6aa4067-5b21-4d98-b172-307b557187f0")));
+		
+		gifts = securedGiftApi.getGifts(++pageNumber, pageSize);
+		assertThat(gifts.size(), is(equalTo(1)));
+		assertThat(gifts.get(0).getUuid(), is(equalTo("5a4dcd02-1e6d-4c4d-a3a0-2e28cb631d21")));
 	}
 }

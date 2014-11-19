@@ -42,7 +42,7 @@ import javax.persistence.Transient;
 		),
 		@NamedNativeQuery(
 				name="Gift.countElementsFilterInappropriate",
-				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1)",
+				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1)",
 				resultSetMapping="giftCount"
 		)
 	}

@@ -1,6 +1,7 @@
 package io.lucci.potlatch.spring;
 
-import io.lucci.potlatch.security.UserArgumentResolver;
+import io.lucci.potlatch.controller.resolver.PageableArgumentResolver;
+import io.lucci.potlatch.controller.resolver.UserArgumentResolver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addArgumentResolvers(List< HandlerMethodArgumentResolver > argumentResolvers) {
     	UserArgumentResolver personResolver = new UserArgumentResolver();
     	argumentResolvers.add(personResolver);
+    	PageableArgumentResolver pageableResolver = new PageableArgumentResolver();
+    	argumentResolvers.add(pageableResolver);
     }
 
     @Override

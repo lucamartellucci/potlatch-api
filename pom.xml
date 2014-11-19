@@ -147,6 +147,14 @@
 			<version>${mysql-connector-java.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- aws -->
+		
+		<dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk</artifactId>
+		    <version>1.9.6</version>
+		</dependency>
 
 		<!-- web -->
 

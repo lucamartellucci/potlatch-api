@@ -8,6 +8,8 @@ import io.lucci.potlatch.persistence.model.UserActionIdDBTO;
 import io.lucci.potlatch.persistence.repository.GiftDBTORepository;
 import io.lucci.potlatch.persistence.repository.UserActionDBTORepository;
 import io.lucci.potlatch.service.adapter.GiftAdapter;
+import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
+import io.lucci.potlatch.service.exception.GiftServiceException;
 
 import java.util.List;
 
@@ -33,10 +35,23 @@ public class SimpleGiftService implements GiftService {
 	@Autowired
 	private GiftAdapter giftAdapter;
 
-	@Transactional @Override public Gift getGiftByUuid(String uuid) throws GiftServiceException {
-		GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
-		Gift gift = giftAdapter.dbtoToTo(giftDBTO, true);
-		return gift;
+	@Transactional @Override public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption {
+		try {
+			
+			GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
+			if (giftDBTO == null) {
+				throw new GiftNotFoundExcetption(new StringBuilder("Unable to find gift with id [").append(uuid).append("]").toString());
+			}
+			
+			// adapt the gift
+			Gift gift = giftAdapter.dbtoToTo(giftDBTO, true);
+			return gift;
+			
+		} catch (GiftNotFoundExcetption e) {
+			throw e;
+		} catch (Exception e) {
+			throw new GiftServiceException(new StringBuilder("Unable to find gift with id [").append(uuid).append("]").toString(), e);
+		}
 	}
 
 
@@ -129,6 +144,14 @@ public class SimpleGiftService implements GiftService {
 			return true;
 		}
 		return false;
+	}
+
+
+
+	@Override
+	public Gift createGift(Gift gift) throws GiftServiceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

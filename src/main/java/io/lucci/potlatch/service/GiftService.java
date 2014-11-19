@@ -1,6 +1,8 @@
 package io.lucci.potlatch.service;
 import io.lucci.potlatch.model.Gift;
 import io.lucci.potlatch.model.User;
+import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
+import io.lucci.potlatch.service.exception.GiftServiceException;
 
 import java.util.List;
 
@@ -20,5 +22,7 @@ public interface GiftService {
 	public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption;
 	
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException;
+
+	public Gift createGift(Gift gift) throws GiftServiceException;
 
 }

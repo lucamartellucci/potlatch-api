@@ -1,4 +1,4 @@
-package io.lucci.potlatch.service;
+package io.lucci.potlatch.service.exception;
 
 public class GiftNotFoundExcetption extends Exception {
 

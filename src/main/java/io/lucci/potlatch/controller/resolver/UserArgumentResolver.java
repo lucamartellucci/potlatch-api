@@ -1,4 +1,6 @@
-package io.lucci.potlatch.security;
+package io.lucci.potlatch.controller.resolver;
+
+import io.lucci.potlatch.security.SimpleUserDetails;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
