@@ -1,5 +1,6 @@
 package io.lucci.potlatch.controller;
 
+import io.lucci.potlatch.controller.exception.InternalServerErrorException;
 import io.lucci.potlatch.controller.exception.ResourceNotFoundException;
 import io.lucci.potlatch.controller.resolver.CurrentUser;
 import io.lucci.potlatch.controller.resolver.PageReq;
@@ -11,8 +12,6 @@ import io.lucci.potlatch.service.exception.GiftServiceException;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 @Controller
+@RequestMapping(value="/api/v1")
 public class GiftController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GiftController.class);
@@ -33,7 +34,7 @@ public class GiftController {
 	
 
     @RequestMapping(value = "/gift/{id}", method = RequestMethod.GET)
-    public @ResponseBody Gift findById(@PathVariable("id") final String id) throws ResourceNotFoundException {
+    public @ResponseBody Gift findById(@PathVariable("id") final String id) throws ResourceNotFoundException, InternalServerErrorException {
     	try { 	
 
     		logger.info("Searching gift with id [{}]", id);
@@ -42,16 +43,18 @@ public class GiftController {
 			return gift;
 			
 		} catch (GiftServiceException e) {
-			logger.error("Unable to find the gift", e);
-			throw new RuntimeException();
+			final String msg = new StringBuilder("Unable to find the gift with id [").append(id).append("]").toString();
+			logger.error(msg, e);
+			throw new InternalServerErrorException(msg, e);
 		} catch (GiftNotFoundExcetption e) {
-			logger.error("Unable to find the gift", e);
-			throw new ResourceNotFoundException();
+			final String msg = new StringBuilder("Unable to find the gift with id [").append(id).append("]").toString();
+			logger.error(msg, e);
+			throw new ResourceNotFoundException(msg);
 		}
     }
     
     @RequestMapping(value = "/gift", method = RequestMethod.GET)
-    public @ResponseBody List<Gift> retrieveGifts(@CurrentUser User user, @PageReq Pageable p) {
+    public @ResponseBody List<Gift> retrieveGifts(@CurrentUser User user, @PageReq Pageable p) throws InternalServerErrorException {
     	try {
 
     		logger.info("Retrieve gifts for user [{}]", user.getUsername());
@@ -61,18 +64,18 @@ public class GiftController {
     		
 		} catch (Exception e) {
 			logger.error("Unable load the gifts", e);
-			throw new RuntimeException(e);
+			throw new InternalServerErrorException("Unable load the gifts", e);
 		}
     }
     
     @RequestMapping(value = "/gift", method = RequestMethod.POST)
-    public @ResponseBody Gift createGift(Gift gift, @CurrentUser User user) {
+    public @ResponseBody Gift createGift(Gift gift, @CurrentUser User user) throws InternalServerErrorException {
     	try {
     		Gift createdGift = giftService.createGift(gift);
     		return createdGift;
 		} catch (Exception e) {
 			logger.error("Unable to create the gift", e);
-			throw new RuntimeException();
+			throw new InternalServerErrorException("Unable to create the gift", e);
 		}
     	
     }

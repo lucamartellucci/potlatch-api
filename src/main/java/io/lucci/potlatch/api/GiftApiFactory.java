@@ -17,8 +17,6 @@ import com.google.gson.JsonParseException;
 
 public class GiftApiFactory {
 
-	private static final String OAUTH_LOGIN = "/oauth/token";
-
 	public GiftApi getSimpleGiftApi(final String endpointUrl){
 		GiftApi giftApi = new RestAdapter.Builder()
 				.setEndpoint(endpointUrl).setLogLevel(LogLevel.FULL)
@@ -33,7 +31,7 @@ public class GiftApiFactory {
 			.setClient(new ApacheClient())
 			.setEndpoint(endpointUrl)
 			.setConverter(buildDateGsonConverter())
-			.setLoginEndpoint(endpointUrl + OAUTH_LOGIN)
+			.setLoginEndpoint(endpointUrl + GiftApi.OAUTH_TOKEN_PATH)
 			.setUsername(username)
 			.setPassword(password)
 			.setClientId(clientId)

@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 @ActiveProfiles(profiles = { "db-test-mysql" })
+//@PropertySource({"file:src/test/resources/persistence-test-mysql.properties"})
 @ContextConfiguration(classes = { PersistenceConfig.class }, loader = AnnotationConfigContextLoader.class)
 public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	
@@ -33,7 +35,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindOne() throws Exception {
     	
-    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	GiftDBTO gift = repo.findOne(1L);
     	assertThat(gift,is(notNullValue()));
     	assertThat(gift.getTitle(), is(equalTo("title_1")));
@@ -51,7 +53,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindByUuid() throws Exception {
     	
-    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	GiftDBTO gift = repo.findByUuid("f6aa4067-5b21-4d98-b172-307b557187f0");
     	assertThat(gift,is(notNullValue()));
     	assertThat(gift.getTitle(), is(equalTo("title_1")));
@@ -69,7 +71,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 	@Test
 	public final void testFindAllByUserId() throws Exception {
 
-		executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+		executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
 		final long userId = 1L;
 		List<GiftDBTO> gifts = repo.findAllByUserId(userId);
 		assertThat(gifts.size(), is(equalTo(3)));
@@ -86,7 +88,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 	@Test
 	public final void testFindAllByUserIdFilterInappropriate() throws Exception {
 
-		executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+		executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
 		final long userId = 1L;
 		List<GiftDBTO> gifts = repo.findAllByUserIdFilterInappropriate(userId);
 		assertThat(gifts.size(), is(equalTo(2)));
@@ -103,7 +105,7 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindAllByUserIdPaged() throws Exception {
     	
-    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	final long userId = 1L;
     	PageRequest pageable = new PageRequest(0, 2);
 		Page<GiftDBTO> pagedGifts = repo.findAllByUserId(userId, pageable);

@@ -54,7 +54,7 @@ public class GiftControllerTest {
 	
 		when(giftService.getGiftByUuid("1")).thenReturn(gift);
     	
-        this.mockMvc.perform( get( "/gift/1" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
+        this.mockMvc.perform( get( "/api/v1/gift/1" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
 	        .andExpect( status().isOk() )
 	        .andExpect( content().contentType( "application/json;charset=UTF-8" ) )
 	        .andDo( print() )
@@ -88,7 +88,7 @@ public class GiftControllerTest {
     			.withStatus("Active")
     			.withTimestamp(new Date())
     			.withTitle("Gift 1")
-    			.withUri("http://localhost/potlatch:8080/api/gift/f6aa4067-5b21-4d98-b172-307b557187f0")
+    			.withUri("http://localhost/potlatch:8080/api/v1/gift/f6aa4067-5b21-4d98-b172-307b557187f0")
     			.withUser(user)
     			.build();
 		return gift;

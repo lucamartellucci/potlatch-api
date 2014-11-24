@@ -11,16 +11,18 @@ import retrofit.http.Query;
 
 public interface GiftApi {
 
-	public static final String TOKEN_PATH = "/oauth/token";
+	public static final String OAUTH_TOKEN_PATH = "/oauth/token";
+	
+	public static final String API_BASE_PATH = "/api/v1";
 	public static final String GIFT_PATH = "/gift";
 
-	@GET(GIFT_PATH + "/{id}")
+	@GET(API_BASE_PATH + GIFT_PATH + "/{id}")
 	public Gift getGiftById(@Path("id") String id);
 	
-	@GET(GIFT_PATH)
+	@GET(API_BASE_PATH + GIFT_PATH)
 	public List<Gift> getGifts();
 	
-	@GET(GIFT_PATH)
+	@GET(API_BASE_PATH + GIFT_PATH)
 	public List<Gift> getGifts(@Query("page") Integer page, @Query("size") Integer size);
 	
 }
