@@ -1,8 +1,8 @@
 package io.lucci.potlatch.service.adapter;
 
-import io.lucci.potlatch.model.User;
 import io.lucci.potlatch.persistence.model.UserDBTO;
-import io.lucci.potlatch.security.SimpleUserDetails;
+import io.lucci.potlatch.web.model.User;
+import io.lucci.potlatch.web.security.SimpleUserDetails;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

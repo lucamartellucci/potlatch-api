@@ -30,7 +30,7 @@ public class UserDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindOne() throws Exception {
     	
-    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	UserDBTO user = repo.findOne(1L);
     	assertThat(user,is(notNullValue()));
     	assertThat(user.getEmail(),is(equalTo("luca.martellucci@gmail.com")));
@@ -47,7 +47,7 @@ public class UserDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
     @Test
     public final void testFindByUsername() throws Exception {
     	
-    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	UserDBTO user = repo.findByUsername("luca");
     	assertThat(user,is(notNullValue()));
     	assertThat(user.getEmail(),is(equalTo("luca.martellucci@gmail.com")));

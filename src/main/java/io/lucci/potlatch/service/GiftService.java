@@ -1,8 +1,8 @@
 package io.lucci.potlatch.service;
-import io.lucci.potlatch.model.Gift;
-import io.lucci.potlatch.model.User;
 import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.exception.GiftServiceException;
+import io.lucci.potlatch.web.model.Gift;
+import io.lucci.potlatch.web.model.User;
 
 import java.util.List;
 

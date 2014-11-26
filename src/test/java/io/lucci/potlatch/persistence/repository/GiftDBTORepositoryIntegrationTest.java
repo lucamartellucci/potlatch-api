@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 @ActiveProfiles(profiles = { "db-test-mysql" })
-//@PropertySource({"file:src/test/resources/persistence-test-mysql.properties"})
 @ContextConfiguration(classes = { PersistenceConfig.class }, loader = AnnotationConfigContextLoader.class)
 public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	

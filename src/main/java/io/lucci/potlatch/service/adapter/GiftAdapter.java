@@ -3,8 +3,8 @@ package io.lucci.potlatch.service.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.lucci.potlatch.model.Gift;
 import io.lucci.potlatch.persistence.model.GiftDBTO;
+import io.lucci.potlatch.web.model.Gift;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

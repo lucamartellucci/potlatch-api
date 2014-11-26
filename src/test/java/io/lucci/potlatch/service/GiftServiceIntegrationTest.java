@@ -4,10 +4,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import io.lucci.potlatch.model.Gift;
 import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.spring.PersistenceConfig;
 import io.lucci.potlatch.spring.ServiceConfig;
+import io.lucci.potlatch.web.model.Gift;
 
 import org.junit.Test;
 import org.slf4j.Logger;

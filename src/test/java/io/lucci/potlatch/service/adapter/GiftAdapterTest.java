@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import io.lucci.potlatch.model.Gift;
 import io.lucci.potlatch.persistence.model.GiftDBTO;
+import io.lucci.potlatch.web.model.Gift;
 
 import org.junit.Test;
 
