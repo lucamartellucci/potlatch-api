@@ -25,8 +25,8 @@
 				<filtering>false</filtering>
 				<includes>
 					
-					<include>**/potlatch/model/**/*.java</include>
-					<include>**/potlatch/api/**/*.java</include>
+					<include>**/potlatch/web/model/**/*.java</include>
+					<include>**/potlatch/client/api/**/*.java</include>
 					 
 				</includes>
 			</resource>

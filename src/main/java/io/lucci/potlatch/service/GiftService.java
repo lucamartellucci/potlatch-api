@@ -23,6 +23,6 @@ public interface GiftService {
 	
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException;
 
-	public Gift createGift(Gift gift) throws GiftServiceException;
+	public Gift createGift(Gift gift, User user) throws GiftServiceException;
 
 }

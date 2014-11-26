@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,9 +48,8 @@ public class GiftController {
 			logger.error(msg, e);
 			throw new InternalServerErrorException(msg, e);
 		} catch (GiftNotFoundExcetption e) {
-			final String msg = new StringBuilder("Unable to find the gift with id [").append(id).append("]").toString();
-			logger.error(msg, e);
-			throw new ResourceNotFoundException(msg);
+			logger.error(e.getMessage(), e);
+			throw new ResourceNotFoundException(e.getMessage());
 		}
     }
     
@@ -69,14 +69,15 @@ public class GiftController {
     }
     
     @RequestMapping(value = "/gift", method = RequestMethod.POST)
-    public @ResponseBody Gift createGift(Gift gift, @CurrentUser User user) throws InternalServerErrorException {
+    public @ResponseBody Gift createGift(@RequestBody Gift gift, @CurrentUser User user) throws InternalServerErrorException {
     	try {
-    		Gift createdGift = giftService.createGift(gift);
+    		Gift createdGift = giftService.createGift(gift, user);
     		return createdGift;
 		} catch (Exception e) {
 			logger.error("Unable to create the gift", e);
 			throw new InternalServerErrorException("Unable to create the gift", e);
 		}
-    	
     }
+    
+    
 }

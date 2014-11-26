@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SimpleGiftService implements GiftService {
@@ -35,12 +34,13 @@ public class SimpleGiftService implements GiftService {
 	@Autowired
 	private GiftAdapter giftAdapter;
 
-	@Transactional @Override public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption {
+	@Override 
+	public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption {
 		try {
 			
 			GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
 			if (giftDBTO == null) {
-				throw new GiftNotFoundExcetption(new StringBuilder("Unable to find gift with id [").append(uuid).append("]").toString());
+				throw new GiftNotFoundExcetption(new StringBuilder("Unable to find the gift with id [").append(uuid).append("]").toString());
 			}
 			
 			// adapt the gift
@@ -50,11 +50,9 @@ public class SimpleGiftService implements GiftService {
 		} catch (GiftNotFoundExcetption e) {
 			throw e;
 		} catch (Exception e) {
-			throw new GiftServiceException(new StringBuilder("Unable to find gift with id [").append(uuid).append("]").toString(), e);
+			throw new GiftServiceException(new StringBuilder("Unable to find the gift with id [").append(uuid).append("]").toString(), e);
 		}
 	}
-
-
 
 	@Override
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException {
@@ -85,8 +83,6 @@ public class SimpleGiftService implements GiftService {
 			throw new GiftServiceException(new StringBuilder("Unable to retrieve gifts for user [").append(user.getId()).append("]").toString(),e);
 		}
 	}
-
-
 
 	@Override
 	public Long likeGift(String uuid, Long userId) throws GiftServiceException, GiftNotFoundExcetption {
@@ -124,6 +120,17 @@ public class SimpleGiftService implements GiftService {
 		return null;
 	}
 
+	@Override
+	public Gift createGift(Gift gift, User user) throws GiftServiceException {
+		
+		try {
+			GiftDBTO giftDBTO = giftAdapter.toToDbto(gift, user);
+			GiftDBTO savedGiftDBTO = giftRepository.save(giftDBTO);
+			return giftAdapter.dbtoToTo(savedGiftDBTO, false);
+		} catch (Exception e) {
+			throw new GiftServiceException("Unable to create the gift",e);
+		}
+	}
 
 	
 	
@@ -148,10 +155,6 @@ public class SimpleGiftService implements GiftService {
 
 
 
-	@Override
-	public Gift createGift(Gift gift) throws GiftServiceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

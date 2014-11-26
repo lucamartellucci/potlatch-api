@@ -8,6 +8,7 @@ public class Gift implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String uuid;
+	
 	private String title;
 	private String description;
 	private Date timestamp;
@@ -18,6 +19,7 @@ public class Gift implements Serializable {
 	private User user;
 	private Boolean likedByMe;
 	private Boolean reportedByMe;
+	
 	public String getUuid() {
 		return uuid;
 	}

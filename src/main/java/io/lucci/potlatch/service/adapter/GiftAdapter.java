@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.lucci.potlatch.persistence.model.GiftDBTO;
 import io.lucci.potlatch.web.model.Gift;
+import io.lucci.potlatch.web.model.User;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class GiftAdapter {
 			gifts.add(dbtoToTo(giftDBTO, adaptUser));
 		}
 		return gifts;
+	}
+
+	public GiftDBTO toToDbto(Gift gift, User user) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

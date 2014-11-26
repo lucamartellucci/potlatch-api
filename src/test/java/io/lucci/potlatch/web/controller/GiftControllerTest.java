@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import io.lucci.potlatch.service.GiftService;
+import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
+import io.lucci.potlatch.web.controller.exception.ErrorCode;
 import io.lucci.potlatch.web.model.Gift;
 import io.lucci.potlatch.web.model.GiftBuilder;
 import io.lucci.potlatch.web.model.User;
@@ -75,6 +77,20 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.user.gender" ).value( user.getGender() ) )
 	        .andExpect( jsonPath( "$.user.blockInappropriate" ).value( user.getBlockInappropriate() ) )
 	        .andExpect( jsonPath( "$.user.refreshInterval" ).value( user.getRefreshInterval().intValue() ) );
+    }
+    
+    @Test
+    public void findByIdNotExistingGiftTest() throws Exception {
+    	
+		final String errorMessage = "Unable to find the gift with id [2]";
+		when(giftService.getGiftByUuid("2")).thenThrow(new GiftNotFoundExcetption(errorMessage));
+    	
+        this.mockMvc.perform( get( "/api/v1/gift/2" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
+	        .andExpect( status().isNotFound() )
+	        .andExpect( content().contentType( "application/json;charset=UTF-8" ) )
+	        .andDo( print() )
+	        .andExpect( jsonPath( "$.code" ).value( ErrorCode.RESOURCE_NOT_FOUND ) )
+	        .andExpect( jsonPath( "$.message" ).value( errorMessage ) );
     }
 
 	private Gift buildGift(User user) {
