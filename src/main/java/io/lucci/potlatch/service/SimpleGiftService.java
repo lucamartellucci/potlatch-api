@@ -10,15 +10,20 @@ import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.exception.GiftServiceException;
 import io.lucci.potlatch.web.model.Gift;
 import io.lucci.potlatch.web.model.User;
+import io.lucci.potlatch.web.model.Gift.GiftStatus;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriTemplate;
 
 @Service
 public class SimpleGiftService implements GiftService {
@@ -33,6 +38,9 @@ public class SimpleGiftService implements GiftService {
 	
 	@Autowired
 	private GiftAdapter giftAdapter;
+
+	@Value("${server.path}")
+	private String serverPath;
 
 	@Override 
 	public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption {
@@ -121,12 +129,26 @@ public class SimpleGiftService implements GiftService {
 	}
 
 	@Override
-	public Gift createGift(Gift gift, User user) throws GiftServiceException {
+	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException {
 		
 		try {
+			logger.debug("Create gift: {} for user: {}", gift, user);
+			
+			final String uuid = UUID.randomUUID().toString();
+			final String uri = new UriTemplate("{SERVER_PATH}/api/v1/{UUID}/data").expand(serverPath, uuid).toString();
+			logger.info("Create gift with id [{}] and uri [{}]", uuid);
+			
 			GiftDBTO giftDBTO = giftAdapter.toToDbto(gift, user);
+			giftDBTO.setUuid(uuid);
+			giftDBTO.setUri(uri);
+			giftDBTO.setTimestamp(new Date());
+			giftDBTO.setParentId(parentId);
+			giftDBTO.setStatus(GiftStatus.ready_for_upload.toString());
+			
+			
 			GiftDBTO savedGiftDBTO = giftRepository.save(giftDBTO);
 			return giftAdapter.dbtoToTo(savedGiftDBTO, false);
+			
 		} catch (Exception e) {
 			throw new GiftServiceException("Unable to create the gift",e);
 		}

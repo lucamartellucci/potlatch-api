@@ -7,6 +7,8 @@ public class Gift implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public enum GiftStatus {active,ready_for_upload,upload_failed}
+	
 	private String uuid;
 	
 	private String title;

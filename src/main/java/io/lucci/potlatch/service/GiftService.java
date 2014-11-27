@@ -23,6 +23,7 @@ public interface GiftService {
 	
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException;
 
-	public Gift createGift(Gift gift, User user) throws GiftServiceException;
+	@Transactional
+	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException;
 
 }

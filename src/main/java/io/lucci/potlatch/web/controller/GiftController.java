@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -69,9 +70,13 @@ public class GiftController {
     }
     
     @RequestMapping(value = "/gift", method = RequestMethod.POST)
-    public @ResponseBody Gift createGift(@RequestBody Gift gift, @CurrentUser User user) throws InternalServerErrorException {
+    public @ResponseBody Gift createGift(
+    		@RequestBody Gift gift, 
+    		@RequestParam("parentId") Long parentId, 
+    		@CurrentUser User user) throws InternalServerErrorException 
+    {
     	try {
-    		Gift createdGift = giftService.createGift(gift, user);
+    		Gift createdGift = giftService.createGift(gift, parentId, user);
     		return createdGift;
 		} catch (Exception e) {
 			logger.error("Unable to create the gift", e);

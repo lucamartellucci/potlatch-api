@@ -2,12 +2,19 @@ package io.lucci.potlatch.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+
+import java.text.SimpleDateFormat;
+
 import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.spring.PersistenceConfig;
 import io.lucci.potlatch.spring.ServiceConfig;
 import io.lucci.potlatch.web.model.Gift;
+import io.lucci.potlatch.web.model.GiftBuilder;
+import io.lucci.potlatch.web.model.User;
+import io.lucci.potlatch.web.model.UserBuilder;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -42,6 +49,53 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
     	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	giftService.likeGift("a6c1e839-d390-4b37-9837-dee63b3cffd1", 1L);
     	fail("Should throw a GiftNotFoundException");
+    }
+    
+    @Test
+    public void testCreateGift() throws Exception {
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	User user = UserBuilder.user()
+    			.withId(1L)
+    			.withEmail("luca.martellucci@gmail.com")
+    			.withUsername("luca")
+    			.withPassword("password")
+    			.withBirthdate(sdf.parse("1978-09-25"))
+    			.withGender("M").withRefreshInterval(60L)
+    			.withBlockInappropriate(true)
+    			.withRoles("ADMIN,USER")
+    			.build();
+    	
+    	String title = "title001";
+		String description = "desc001";
+		Gift gift = GiftBuilder.gift().withTitle(title)
+    			.withDescription(description)
+    			.withUser(user)
+    			.build();
+		
+		Gift savedGift = giftService.createGift(gift , null, user);
+		logger.info("saved gift is {}", savedGift);
+		
+		assertThat(savedGift, is(notNullValue()));
+		assertThat(savedGift.getTitle(), is(equalTo(title)));
+		assertThat(savedGift.getDescription(), is(equalTo(description)));
+		assertThat(savedGift.getUri(), is(notNullValue()));
+		assertThat(savedGift.getUri(), is(notNullValue()));
+		assertThat(savedGift.getTimestamp(), is(notNullValue()));
+		assertThat(savedGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
+		assertThat(savedGift.getChainMaster(), is(equalTo(Boolean.TRUE)));
+		
+		savedGift = giftService.createGift(gift , 1L, user);
+		logger.info("saved gift is {}", savedGift);
+		
+		assertThat(savedGift, is(notNullValue()));
+		assertThat(savedGift.getTitle(), is(equalTo(title)));
+		assertThat(savedGift.getDescription(), is(equalTo(description)));
+		assertThat(savedGift.getUri(), is(notNullValue()));
+		assertThat(savedGift.getUri(), is(notNullValue()));
+		assertThat(savedGift.getTimestamp(), is(notNullValue()));
+		assertThat(savedGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
+		assertThat(savedGift.getChainMaster(), is(equalTo(Boolean.FALSE)));
     }
 
 }

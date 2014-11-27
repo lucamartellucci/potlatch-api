@@ -96,4 +96,12 @@ class UserBuilderBase<GeneratorT extends UserBuilderBase<GeneratorT>> {
 
 		return (GeneratorT) this;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public GeneratorT withRoles(String aValue) {
+		instance.setRoles(aValue);
+
+		return (GeneratorT) this;
+	}
+
 }

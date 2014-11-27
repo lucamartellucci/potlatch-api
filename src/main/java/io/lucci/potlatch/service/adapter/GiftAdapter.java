@@ -42,8 +42,18 @@ public class GiftAdapter {
 	}
 
 	public GiftDBTO toToDbto(Gift gift, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		if (gift == null) {
+			return null;
+		}
+		GiftDBTO result = new GiftDBTO();
+		result.setTitle(gift.getTitle());
+		result.setDescription(gift.getDescription());
+		result.setStatus(gift.getStatus());
+		result.setTimestamp(gift.getTimestamp());
+		if (user != null) {
+			result.setUser(userAdapter.toTOdbto(user));
+		}
+		return result;
 	}
 
 }
