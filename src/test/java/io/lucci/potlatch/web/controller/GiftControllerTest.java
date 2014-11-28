@@ -2,6 +2,7 @@ package io.lucci.potlatch.web.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,15 +15,18 @@ import io.lucci.potlatch.web.model.GiftBuilder;
 import io.lucci.potlatch.web.model.User;
 import io.lucci.potlatch.web.model.UserBuilder;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.GsonBuilderUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -34,6 +38,8 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration ( classes = { ControllerTestConfig.class } )
 @WebAppConfiguration
 public class GiftControllerTest {
+	
+	private static Logger logger = LoggerFactory.getLogger(GiftControllerTest.class);
 
     @Autowired
     private WebApplicationContext wac;
@@ -42,16 +48,20 @@ public class GiftControllerTest {
     private GiftService giftService;
 
     private MockMvc mockMvc;
+    
+    private User user;
 
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup( this.wac ).build();
+        user = buildUser();
+        UserArgumentResolverMock.setUser(user);
     }
     
     @Test
-    public void findByIdTest() throws Exception {
+    @DirtiesContext
+    public void testFindById() throws Exception {
     	
-		User user = buildUser();
 		Gift gift = buildGift(user);
 	
 		when(giftService.getGiftByUuid("1")).thenReturn(gift);
@@ -77,10 +87,13 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.user.gender" ).value( user.getGender() ) )
 	        .andExpect( jsonPath( "$.user.blockInappropriate" ).value( user.getBlockInappropriate() ) )
 	        .andExpect( jsonPath( "$.user.refreshInterval" ).value( user.getRefreshInterval().intValue() ) );
+        
+//        verify(giftService).getGiftByUuid("1");
     }
     
     @Test
-    public void findByIdNotExistingGiftTest() throws Exception {
+    @DirtiesContext
+    public void testFindByIdNotExistingGift() throws Exception {
     	
 		final String errorMessage = "Unable to find the gift with id [2]";
 		when(giftService.getGiftByUuid("2")).thenThrow(new GiftNotFoundExcetption(errorMessage));
@@ -91,7 +104,44 @@ public class GiftControllerTest {
 	        .andDo( print() )
 	        .andExpect( jsonPath( "$.code" ).value( ErrorCode.RESOURCE_NOT_FOUND ) )
 	        .andExpect( jsonPath( "$.message" ).value( errorMessage ) );
+        
     }
+    
+    @Test
+    @DirtiesContext
+    public void testCreateGift() throws Exception {
+    	
+		Gift gift = GiftBuilder.gift().withTitle("title001").withDescription("desc001").build();
+		
+		Gift savedGift = GiftBuilder.gift()
+				.withTitle("title001")
+				.withDescription("desc001")
+				.withChainMaster(Boolean.TRUE)
+				.withStatus(Gift.GiftStatus.ready_for_upload.toString())
+				.withTimestamp(new Date())
+				.withUri("http://localhost/potlatch:8080/api/v1/gift/f6aa4067-5b21-4d98-b172-307b557187f0/data")
+				.withUuid("f6aa4067-5b21-4d98-b172-307b557187f0")
+				.build();
+
+		when(giftService.createGift(gift, null, user)).thenReturn(savedGift);
+		
+        this.mockMvc.perform( post( "/api/v1/gift?parentId=" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) )
+        		.content(GsonBuilderUtils.gsonBuilderWithBase64EncodedByteArrays().create().toJson(gift))
+        		.contentType(MediaType.APPLICATION_JSON))
+        	.andDo( print() )
+	        .andExpect( status().isOk() )
+	        .andExpect( content().contentType( "application/json;charset=UTF-8" ) )
+	        .andExpect( jsonPath( "$.uuid" ).value( savedGift.getUuid() ) )
+	        .andExpect( jsonPath( "$.title" ).value( savedGift.getTitle() ) )
+	        .andExpect( jsonPath( "$.description" ).value( savedGift.getDescription() ) )
+	        .andExpect( jsonPath( "$.timestamp" ).value( savedGift.getTimestamp().getTime() ) )
+	        .andExpect( jsonPath( "$.chainMaster" ).value( savedGift.getChainMaster() ) )
+	        .andExpect( jsonPath( "$.status" ).value( savedGift.getStatus() ) );
+        
+//        verify(giftService);
+    }
+    
+    
 
 	private Gift buildGift(User user) {
 		Gift gift = GiftBuilder.gift()
@@ -110,8 +160,9 @@ public class GiftControllerTest {
 		return gift;
 	}
 
-	private User buildUser() throws ParseException {
-		User user = UserBuilder.user()
+	private User buildUser() {
+		try {
+			User user = UserBuilder.user()
 				.withEmail("luca@gmail.com")
 				.withGender("M")
 				.withId(1L)
@@ -121,7 +172,11 @@ public class GiftControllerTest {
 				.withRefreshInterval(60L)
 				.withUsername("luca")
 				.build();
-		return user;
+			return user;
+		} catch (Exception e) {
+			logger.warn("Unable to create the user");
+		}
+		return null;
 	}
 
 	

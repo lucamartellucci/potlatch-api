@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -27,6 +28,11 @@ public class ControllerTestConfig extends WebMvcConfigurerAdapter {
 	@Bean
     public GiftService ecosystemInstanceService() {
         return Mockito.mock( GiftService.class );
+    }
+	
+	@Override
+	public void addArgumentResolvers( List<HandlerMethodArgumentResolver> argumentResolvers ) {
+        argumentResolvers.add( new UserArgumentResolverMock() );
     }
 	
 	@Override
