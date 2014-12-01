@@ -1,5 +1,6 @@
 package io.lucci.potlatch.web.controller;
 
+import io.lucci.potlatch.service.GiftManager;
 import io.lucci.potlatch.service.GiftService;
 import io.lucci.potlatch.service.StorageService;
 
@@ -34,6 +35,11 @@ public class ControllerTestConfig extends WebMvcConfigurerAdapter {
 	@Bean
     public StorageService storageService() {
         return Mockito.mock( StorageService.class );
+    }
+	
+	@Bean
+    public GiftManager giftManager() {
+        return Mockito.mock( GiftManager.class );
     }
 	
 	@Override

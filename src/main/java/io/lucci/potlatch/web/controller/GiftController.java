@@ -1,7 +1,10 @@
 package io.lucci.potlatch.web.controller;
 
+import io.lucci.potlatch.service.GiftManager;
 import io.lucci.potlatch.service.GiftService;
 import io.lucci.potlatch.service.StorageService;
+import io.lucci.potlatch.service.StorageService.StorageAction;
+import io.lucci.potlatch.service.StorageServiceException;
 import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.exception.GiftServiceException;
 import io.lucci.potlatch.web.controller.exception.InternalServerErrorException;
@@ -11,6 +14,8 @@ import io.lucci.potlatch.web.controller.resolver.PageReq;
 import io.lucci.potlatch.web.model.Gift;
 import io.lucci.potlatch.web.model.User;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,6 +43,9 @@ public class GiftController {
 	
 	@Autowired
 	private StorageService storageService;
+	
+	@Autowired
+	private GiftManager giftManager;
 	
 
     @RequestMapping(value = "/gift/{id}", method = RequestMethod.GET)
@@ -91,40 +99,29 @@ public class GiftController {
     
     
     @RequestMapping(value = "/gift/{id}/data", method = RequestMethod.POST)
-    public @ResponseBody Gift saveGiftPicture(
+    public @ResponseBody Gift setGiftData(
     		@PathVariable("id") final String id, @RequestParam("file") final MultipartFile multiPart, @CurrentUser User user) 
     				throws InternalServerErrorException, ResourceNotFoundException 
     {
     	logger.info("Storing data for gift [{}]", id);
     	Gift gift = null;
     	try {
-			gift = giftService.getGiftByUuid(id);
-    	} catch (GiftServiceException e) {
-			final String msg = new StringBuilder("Unable to find the gift with id [").append(id).append("]").toString();
-			logger.error(msg, e);
-			throw new InternalServerErrorException(msg, e);
-		} catch (GiftNotFoundExcetption e) {
-			logger.error(e.getMessage(), e);
-			throw new ResourceNotFoundException(e.getMessage());
+			gift = giftManager.setGiftData(id, multiPart.getInputStream());
+		} catch (IOException e) {
+			throw new InternalServerErrorException("Unable to set data for the gift [" + id + "]" );
 		}
-    	
-    	try {
-    		storageService.storeObject(multiPart.getInputStream(), String.format("%s.jpg", id));
-		} catch (Exception e) {
-			logger.error("Unable to store the gift data", e);
-			throw new InternalServerErrorException("Unable to store the gift data", e);
-		}
-    	
-    	try {
-    		gift.setUser(user);
-    		gift.setStatus(Gift.GiftStatus.active.toString());
-			gift = giftService.updateGift(gift);
-		} catch (Exception e) {
-			logger.error("Unable to store the gift status", e);
-			throw new InternalServerErrorException("Unable to update the gift status", e);
-		}
-    	
     	return gift;
+    }
+    
+    @RequestMapping(value = "/gift/{id}/data", method = RequestMethod.GET)
+    public String getGiftData(@PathVariable("id") final String id) throws InternalServerErrorException {
+    	logger.info("Retrieve data for gift [{}]", id);
+    	try {
+			URL url = storageService.prepareUrl(StorageAction.READ, String.format("%s.jpg", id));
+			return String.format("redirect:%s", url);
+		} catch (StorageServiceException e) {
+			throw new InternalServerErrorException("Unable to get data for the gift [" + id + "]" );
+		}
     }
     
 }

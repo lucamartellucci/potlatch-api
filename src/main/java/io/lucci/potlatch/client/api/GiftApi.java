@@ -4,6 +4,7 @@ import io.lucci.potlatch.web.model.Gift;
 
 import java.util.List;
 
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
@@ -11,6 +12,7 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.Streaming;
 import retrofit.mime.TypedFile;
 
 
@@ -47,5 +49,9 @@ public interface GiftApi {
 	@Multipart
 	@POST(PATH_GIFT_DATA)
 	public Gift setGiftData(@Path(PARAM_ID) String id, @Part(PARAM_FILE) TypedFile file);
+	
+	@Streaming
+	@GET(PATH_GIFT_DATA)
+	public Response getGiftData(@Path(PARAM_ID) String id);
 	
 }

@@ -3,6 +3,7 @@ import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.service.exception.GiftServiceException;
 import io.lucci.potlatch.web.model.Gift;
 import io.lucci.potlatch.web.model.User;
+import io.lucci.potlatch.web.model.Gift.GiftStatus;
 
 import java.util.List;
 
@@ -25,6 +26,6 @@ public interface GiftService {
 
 	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException;
 
-	public Gift updateGift(Gift gift) throws GiftServiceException;
+	public Gift updateGiftStatus(String uuid, GiftStatus status) throws GiftServiceException, GiftNotFoundExcetption;
 
 }

@@ -13,10 +13,12 @@ import io.lucci.potlatch.web.model.Gift;
 import io.lucci.potlatch.web.model.GiftBuilder;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 public class GiftControllerLiveTest {
@@ -109,6 +112,15 @@ public class GiftControllerLiveTest {
 		TypedFile giftData = new TypedFile("image/jpeg", file);
 		Gift gift = securedGiftApi.setGiftData("c95265f8-e274-49ef-9970-b171dfadfb12", giftData );
 		logger.info("Gift: {}", gift);
+	}
+	
+	@Test
+	public void testGetGiftData() throws Exception {
+		FileOutputStream output = new FileOutputStream(new File("/home/luca/tmp/"+System.currentTimeMillis()+".jpg"));
+		Response response = securedGiftApi.getGiftData("c95265f8-e274-49ef-9970-b171dfadfb12");
+		IOUtils.copy(response.getBody().in(), output);
+		output.flush();
+		output.close();
 	}
 	
 	@Test

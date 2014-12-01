@@ -155,11 +155,16 @@ public class SimpleGiftService implements GiftService {
 	}
 	
 	@Override
-	public Gift updateGift(Gift gift) throws GiftServiceException {
+	public Gift updateGiftStatus(String uuid, GiftStatus status) throws GiftServiceException, GiftNotFoundExcetption {
 		try {
-			logger.debug("Update gift: {} for user: {}", gift);
+			logger.debug("Update gift status to: {} for gift: {}", status, uuid);
 			
-			GiftDBTO giftDBTO = giftAdapter.toToDbto(gift, gift.getUser());
+			GiftDBTO giftDBTO = giftRepository.findByUuid(uuid);
+			if (giftDBTO == null) {
+				throw new GiftNotFoundExcetption("Unable to find gift with uuid {}" + uuid);
+			}
+			
+			giftDBTO.setStatus(status.toString());
 			GiftDBTO savedGiftDBTO = giftRepository.save(giftDBTO);
 			return giftAdapter.dbtoToTo(savedGiftDBTO, false);
 			
