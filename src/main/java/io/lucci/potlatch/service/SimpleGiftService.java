@@ -135,7 +135,7 @@ public class SimpleGiftService implements GiftService {
 			logger.debug("Create gift: {} for user: {}", gift, user);
 			
 			final String uuid = UUID.randomUUID().toString();
-			final String uri = new UriTemplate("{SERVER_PATH}/api/v1/{UUID}/data").expand(serverPath, uuid).toString();
+			final String uri = new UriTemplate("{SERVER_PATH}/api/v1/gift/{UUID}/data").expand(serverPath, uuid).toString();
 			logger.info("Create gift with id [{}] and uri [{}]", uuid);
 			
 			GiftDBTO giftDBTO = giftAdapter.toToDbto(gift, user);

@@ -72,7 +72,7 @@ public class GiftController {
     @RequestMapping(value = "/gift", method = RequestMethod.POST)
     public @ResponseBody Gift createGift(
     		@RequestBody Gift gift, 
-    		@RequestParam("parentId") Long parentId, 
+    		@RequestParam( value="parentId", required = false) Long parentId, 
     		@CurrentUser User user) throws InternalServerErrorException 
     {
     	try {
@@ -83,6 +83,5 @@ public class GiftController {
 			throw new InternalServerErrorException("Unable to create the gift", e);
 		}
     }
-    
     
 }

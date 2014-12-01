@@ -125,7 +125,7 @@ public class GiftControllerTest {
 
 		when(giftService.createGift(gift, null, user)).thenReturn(savedGift);
 		
-        this.mockMvc.perform( post( "/api/v1/gift?parentId=" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) )
+        this.mockMvc.perform( post( "/api/v1/gift" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) )
         		.content(GsonBuilderUtils.gsonBuilderWithBase64EncodedByteArrays().create().toJson(gift))
         		.contentType(MediaType.APPLICATION_JSON))
         	.andDo( print() )

@@ -4,7 +4,9 @@ import io.lucci.potlatch.web.model.Gift;
 
 import java.util.List;
 
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -24,5 +26,12 @@ public interface GiftApi {
 	
 	@GET(API_BASE_PATH + GIFT_PATH)
 	public List<Gift> getGifts(@Query("page") Integer page, @Query("size") Integer size);
+	
+	@POST(API_BASE_PATH + GIFT_PATH)
+	public Gift createGift(@Body Gift gift );
+	
+	@POST(API_BASE_PATH + GIFT_PATH)
+	public Gift createChainedGift(@Body Gift gift, @Query("parentId") Long parentId );
+
 	
 }

@@ -34,7 +34,7 @@ public class SimpleUserDetailsServiceIntegrationTest extends AbstractTransaction
     
     @Test
     public void testLoadUserByUsername() throws Exception {
-    	executeSqlScript("file:src/test/resource/db/gift.prepareDB.sql", false);
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	UserDetails userDetails = userDetailService.loadUserByUsername("luca");
     	assertThat(userDetails, is(notNullValue()));
     	assertThat(userDetails.getAuthorities(), hasSize(2));

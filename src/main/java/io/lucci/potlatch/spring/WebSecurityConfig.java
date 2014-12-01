@@ -61,7 +61,7 @@ public class WebSecurityConfig {
 					.access("#oauth2.hasScope('read')");
 				
 				http.authorizeRequests()
-					.antMatchers("/**")
+					.antMatchers(HttpMethod.POST, "/**")
 					.access("#oauth2.hasScope('write')");
 			}
 

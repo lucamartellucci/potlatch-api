@@ -19,8 +19,10 @@ public interface GiftService {
 	@Transactional
 	public Long unlikeGift(String uuid, Long userId) throws GiftServiceException, GiftNotFoundExcetption;
 
+	@Transactional
 	public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption;
 	
+	@Transactional
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException;
 
 	@Transactional
