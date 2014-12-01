@@ -32,11 +32,17 @@ public class StorageServiceIntegrationTest extends AbstractTransactionalJUnit4Sp
     private StorageService storageService;
 
     @Test
-    public final void testGeneratePresignedURL() throws Exception {
-    	URL url = storageService.generatePresignedURL(StorageAction.WRITE, "test-uuid");
+    public void testGeneratePresignedURL() throws Exception {
+    	URL url = storageService.prepareUrl(StorageAction.WRITE, "test-uuid");
     	logger.info("The presigned url is: {}", url);
     	assertNotNull(url);
     	uploadObject(url);
+    }
+    
+    @Test
+    public void testSaveObject() throws Exception {
+    	FileInputStream in = new FileInputStream(new File(this.getClass().getResource("/images/lollipop.jpg").getFile()));
+    	storageService.saveObject(in, "obj"+System.currentTimeMillis());
     }
     
     private void uploadObject(URL url) throws IOException {

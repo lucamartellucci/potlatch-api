@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import io.lucci.potlatch.client.api.GiftApi;
@@ -117,7 +118,22 @@ public class GiftControllerLiveTest {
 		
 	}
 	
-	
+	@Test
+	public void testCreateChainedGift() throws Exception {
+		
+		Gift gift = GiftBuilder.gift().withTitle("I love the sun").withDescription("A really sunny day!").build();
+		Gift newGift = securedGiftApi.createChainedGift(gift, 1L);
+		
+		assertThat(newGift, is(notNullValue()));
+		assertThat(newGift.getUuid(), is(notNullValue()));
+		assertThat(newGift.getTitle(), is(equalTo("I love the sun")));
+		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
+		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
+		assertThat(newGift.getUri(), is(notNullValue()));
+		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.API_BASE_PATH+GiftApi.GIFT_PATH+"/"+newGift.getUuid()+"/data")));
+		assertFalse(newGift.getChainMaster().booleanValue());
+		
+	}
 	
 	
 }
