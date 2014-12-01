@@ -1,6 +1,7 @@
 package io.lucci.potlatch.web.controller;
 
 import io.lucci.potlatch.service.GiftService;
+import io.lucci.potlatch.service.StorageService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +27,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ControllerTestConfig extends WebMvcConfigurerAdapter {
 	
 	@Bean
-    public GiftService ecosystemInstanceService() {
+    public GiftService giftService() {
         return Mockito.mock( GiftService.class );
+    }
+	
+	@Bean
+    public StorageService storageService() {
+        return Mockito.mock( StorageService.class );
     }
 	
 	@Override

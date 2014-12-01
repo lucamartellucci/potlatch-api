@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import io.lucci.potlatch.service.GiftService;
+import io.lucci.potlatch.service.StorageService;
 import io.lucci.potlatch.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.web.controller.exception.ErrorCode;
 import io.lucci.potlatch.web.model.Gift;
@@ -46,6 +47,8 @@ public class GiftControllerTest {
 
     @Autowired
     private GiftService giftService;
+    
+    @Autowired StorageService storageService;
 
     private MockMvc mockMvc;
     
@@ -78,16 +81,8 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.status" ).value( gift.getStatus() ) )
 	        .andExpect( jsonPath( "$.numberOfLikes" ).value( gift.getNumberOfLikes().intValue() ) )
 	        .andExpect( jsonPath( "$.reportedByMe" ).value( gift.getReportedByMe() ) )
-	        .andExpect( jsonPath( "$.likedByMe" ).value( gift.getLikedByMe() ) )
-	        .andExpect( jsonPath( "$.user.id" ).value( user.getId().intValue() ) )
-	        .andExpect( jsonPath( "$.user.email" ).value( user.getEmail() ) )
-	        .andExpect( jsonPath( "$.user.username" ).value( user.getUsername() ) )
-	        .andExpect( jsonPath( "$.user.password" ).value( user.getPassword() ) )
-	        .andExpect( jsonPath( "$.user.birthdate" ).value( user.getBirthdate().getTime() ) )
-	        .andExpect( jsonPath( "$.user.gender" ).value( user.getGender() ) )
-	        .andExpect( jsonPath( "$.user.blockInappropriate" ).value( user.getBlockInappropriate() ) )
-	        .andExpect( jsonPath( "$.user.refreshInterval" ).value( user.getRefreshInterval().intValue() ) );
-        
+	        .andExpect( jsonPath( "$.likedByMe" ).value( gift.getLikedByMe() ));
+	        
 //        verify(giftService).getGiftByUuid("1");
     }
     

@@ -71,7 +71,7 @@ public class S3StorageService implements StorageService {
 	}
 
 	@Override
-	public void saveObject(InputStream data, String objectName) throws StorageServiceException {
+	public void storeObject(InputStream data, String objectName) throws StorageServiceException {
 		
 		AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(accessKeyId, secretAccessKey));
 		try {
@@ -79,7 +79,7 @@ public class S3StorageService implements StorageService {
 			PutObjectResult response = s3client.putObject(request);
 			logger.info("Uploaded object eTag is [{}]",response.getETag());
 		} catch (Exception e) {
-			throw new StorageServiceException(new StringBuilder("Unable to upload object [").append(objectName).append("]").toString(), e);
+			throw new StorageServiceException(new StringBuilder("Unable to store object [").append(objectName).append("]").toString(), e);
 		}
 		
 	}

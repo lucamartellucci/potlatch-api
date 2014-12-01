@@ -6,6 +6,7 @@ import io.lucci.potlatch.web.controller.resolver.UserArgumentResolver;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -13,6 +14,8 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -24,7 +27,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    public WebConfig() {
+    private static final int MAX_UPLOAD_SIZE = 5242880;
+    private static final int MAX_IN_MEMORY_SIZE = 5242880;
+
+	public WebConfig() {
         super();
     }
     
@@ -53,5 +59,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         super.configureMessageConverters( converters );
     }
-
+    
+    @Bean(name="multipartResolver")
+    MultipartResolver multipartConfigElement() {
+    	CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+    	multipartResolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
+    	multipartResolver.setMaxInMemorySize(MAX_IN_MEMORY_SIZE);
+		return multipartResolver; 
+    }
 }

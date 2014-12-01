@@ -11,6 +11,6 @@ public interface StorageService {
 	
 	public URL prepareUrl(StorageAction action, String objectName) throws StorageServiceException;	
 	
-	public void saveObject(InputStream data, String objectName) throws StorageServiceException;
+	public void storeObject(InputStream data, String objectName) throws StorageServiceException;
 
 }

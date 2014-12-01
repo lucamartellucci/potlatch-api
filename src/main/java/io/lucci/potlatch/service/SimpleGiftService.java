@@ -52,7 +52,7 @@ public class SimpleGiftService implements GiftService {
 			}
 			
 			// adapt the gift
-			Gift gift = giftAdapter.dbtoToTo(giftDBTO, true);
+			Gift gift = giftAdapter.dbtoToTo(giftDBTO, false);
 			return gift;
 			
 		} catch (GiftNotFoundExcetption e) {
@@ -153,6 +153,20 @@ public class SimpleGiftService implements GiftService {
 			throw new GiftServiceException("Unable to create the gift",e);
 		}
 	}
+	
+	@Override
+	public Gift updateGift(Gift gift) throws GiftServiceException {
+		try {
+			logger.debug("Update gift: {} for user: {}", gift);
+			
+			GiftDBTO giftDBTO = giftAdapter.toToDbto(gift, gift.getUser());
+			GiftDBTO savedGiftDBTO = giftRepository.save(giftDBTO);
+			return giftAdapter.dbtoToTo(savedGiftDBTO, false);
+			
+		} catch (Exception e) {
+			throw new GiftServiceException("Unable to update the gift",e);
+		}
+	}
 
 	
 	
@@ -174,6 +188,8 @@ public class SimpleGiftService implements GiftService {
 		}
 		return false;
 	}
+
+	
 
 
 

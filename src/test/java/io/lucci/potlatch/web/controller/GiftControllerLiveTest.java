@@ -12,6 +12,7 @@ import io.lucci.potlatch.client.api.GiftApiFactory;
 import io.lucci.potlatch.web.model.Gift;
 import io.lucci.potlatch.web.model.GiftBuilder;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import retrofit.RetrofitError;
+import retrofit.mime.TypedFile;
 
 public class GiftControllerLiveTest {
 	
@@ -102,6 +104,14 @@ public class GiftControllerLiveTest {
 	}
 	
 	@Test
+	public void testSetGiftData() throws Exception {
+		File file = new File(this.getClass().getResource("/images/lollipop.jpg").getFile());
+		TypedFile giftData = new TypedFile("image/jpeg", file);
+		Gift gift = securedGiftApi.setGiftData("c95265f8-e274-49ef-9970-b171dfadfb12", giftData );
+		logger.info("Gift: {}", gift);
+	}
+	
+	@Test
 	public void testCreateGift() throws Exception {
 		
 		Gift gift = GiftBuilder.gift().withTitle("I love the sun").withDescription("A really sunny day!").build();
@@ -113,7 +123,7 @@ public class GiftControllerLiveTest {
 		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
 		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
 		assertThat(newGift.getUri(), is(notNullValue()));
-		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.API_BASE_PATH+GiftApi.GIFT_PATH+"/"+newGift.getUuid()+"/data")));
+		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.PATH_BASE+GiftApi.PATH_GIFT+"/"+newGift.getUuid()+"/data")));
 		assertTrue(newGift.getChainMaster().booleanValue());
 		
 	}
@@ -130,7 +140,7 @@ public class GiftControllerLiveTest {
 		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
 		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
 		assertThat(newGift.getUri(), is(notNullValue()));
-		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.API_BASE_PATH+GiftApi.GIFT_PATH+"/"+newGift.getUuid()+"/data")));
+		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.PATH_BASE+GiftApi.PATH_GIFT+"/"+newGift.getUuid()+"/data")));
 		assertFalse(newGift.getChainMaster().booleanValue());
 		
 	}

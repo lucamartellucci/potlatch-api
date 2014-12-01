@@ -31,7 +31,7 @@ public class GiftApiFactory {
 			.setClient(new ApacheClient())
 			.setEndpoint(endpointUrl)
 			.setConverter(buildDateGsonConverter())
-			.setLoginEndpoint(endpointUrl + GiftApi.OAUTH_TOKEN_PATH)
+			.setLoginEndpoint(endpointUrl + GiftApi.PATH_OAUTH_TOKEN)
 			.setUsername(username)
 			.setPassword(password)
 			.setClientId(clientId)

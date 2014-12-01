@@ -42,7 +42,7 @@ public class StorageServiceIntegrationTest extends AbstractTransactionalJUnit4Sp
     @Test
     public void testSaveObject() throws Exception {
     	FileInputStream in = new FileInputStream(new File(this.getClass().getResource("/images/lollipop.jpg").getFile()));
-    	storageService.saveObject(in, "obj"+System.currentTimeMillis());
+    	storageService.storeObject(in, "obj"+System.currentTimeMillis());
     }
     
     private void uploadObject(URL url) throws IOException {
