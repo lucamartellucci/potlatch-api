@@ -27,12 +27,12 @@ import javax.persistence.Transient;
 	{
 		@NamedNativeQuery(
 			name="Gift.findAllByUserId",
-			query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null order by g.timestamp desc", 
+			query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null order by g.timestamp desc", 
 			resultSetMapping="giftExtended"
 		),
 		@NamedNativeQuery(
 				name="Gift.findAllByUserIdFilterInappropriate",
-				query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
+				query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
 				resultSetMapping="giftExtended"
 		),
 		@NamedNativeQuery(
@@ -63,6 +63,9 @@ import javax.persistence.Transient;
 						 @ColumnResult(name="number_of_likes", type=java.lang.Long.class),
 						 @ColumnResult(name="i_like_it", type=java.lang.Boolean.class),
 						 @ColumnResult(name="inappropriate", type=java.lang.Boolean.class),
+						 @ColumnResult(name="user_id", type=java.lang.Long.class),
+						 @ColumnResult(name="username", type=java.lang.String.class),
+						 @ColumnResult(name="email", type=java.lang.String.class),
 					}
 				)
 	}),
@@ -120,7 +123,7 @@ public class GiftDBTO {
 	
 	public GiftDBTO(Long id, String uuid, String title, String description,
 			Date timestamp, Long parentId, String uri, String status,
-			Long numberOfLikes, Boolean liked, Boolean reported) {
+			Long numberOfLikes, Boolean liked, Boolean reported, Long userId, String username, String email) {
 		
 		super();
 		this.id = id;
@@ -134,6 +137,7 @@ public class GiftDBTO {
 		this.numberOfLikes = numberOfLikes;
 		this.liked = liked;
 		this.reported = reported;
+		this.user = new UserDBTO(userId,username,email);
 	}
 
 	public Long getId() {

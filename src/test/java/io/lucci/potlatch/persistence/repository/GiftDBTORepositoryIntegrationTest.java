@@ -81,6 +81,15 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 		GiftDBTO gift1 = gifts.get(0);
 		assertThat(gift1.getId(), is(equalTo(1L)));
 		assertThat(gift1.getLiked(), is(equalTo(Boolean.TRUE)));
+		assertThat(gift1.getTitle(), is("title_1"));
+		assertThat(gift1.getDescription(), is("description_1"));
+		assertThat(gift1.getUuid(), is("f6aa4067-5b21-4d98-b172-307b557187f0"));
+		assertThat(gift1.getUri(), is("http://www.url1.it"));
+		assertThat(gift1.getStatus(), is("active"));
+		assertThat(gift1.getUser(), is(notNullValue()));
+		assertThat(gift1.getUser().getId(), is(1L));
+		assertThat(gift1.getUser().getUsername(), is("luca"));
+		assertThat(gift1.getUser().getEmail(), is("luca.martellucci@gmail.com"));
 	}
 	
 	@Test
@@ -98,6 +107,15 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 		GiftDBTO gift1 = gifts.get(0);
 		assertThat(gift1.getId(), is(equalTo(1L)));
 		assertThat(gift1.getLiked(), is(equalTo(Boolean.TRUE)));
+		assertThat(gift1.getTitle(), is("title_1"));
+		assertThat(gift1.getDescription(), is("description_1"));
+		assertThat(gift1.getUuid(), is("f6aa4067-5b21-4d98-b172-307b557187f0"));
+		assertThat(gift1.getUri(), is("http://www.url1.it"));
+		assertThat(gift1.getStatus(), is("active"));
+		assertThat(gift1.getUser(), is(notNullValue()));
+		assertThat(gift1.getUser().getId(), is(1L));
+		assertThat(gift1.getUser().getUsername(), is("luca"));
+		assertThat(gift1.getUser().getEmail(), is("luca.martellucci@gmail.com"));
 	}
     
     @Test

@@ -44,7 +44,18 @@ public class UserDBTO {
 	
 	private String roles;
 
-
+	
+	public UserDBTO(){
+		super();
+	}
+	
+	public UserDBTO(Long id, String username, String email){
+		super();
+		this.id=id;
+		this.username=username;
+		this.email=email;
+	}
+	
 	public Long getId() {
 		return id;
 	}
