@@ -81,7 +81,7 @@ public class SimpleGiftManager implements GiftManager {
 
 	@Override
 	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException {
-		return createGift(gift, parentId, user);
+		return giftService.createGift(gift, parentId, user);
 	}
 	
 }

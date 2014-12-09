@@ -23,7 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-@ActiveProfiles(profiles = { "db-test-mysql" })
+@ActiveProfiles(profiles = { "test" })
 @ContextConfiguration(classes = { PersistenceConfig.class, ServiceConfig.class }, loader = AnnotationConfigContextLoader.class)
 public class StorageServiceIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	

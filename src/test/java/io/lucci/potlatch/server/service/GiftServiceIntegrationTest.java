@@ -5,10 +5,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-
-import java.text.SimpleDateFormat;
-
-import io.lucci.potlatch.server.service.GiftService;
 import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.spring.PersistenceConfig;
 import io.lucci.potlatch.server.spring.ServiceConfig;
@@ -17,6 +13,9 @@ import io.lucci.potlatch.server.web.model.GiftBuilder;
 import io.lucci.potlatch.server.web.model.User;
 import io.lucci.potlatch.server.web.model.UserBuilder;
 
+import java.text.SimpleDateFormat;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-@ActiveProfiles(profiles = { "db-test-mysql" })
+@ActiveProfiles(profiles = { "test" })
 @ContextConfiguration(classes = { PersistenceConfig.class, ServiceConfig.class }, loader = AnnotationConfigContextLoader.class)
 public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	
@@ -34,10 +33,14 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
 
     @Autowired
     private GiftService giftService;
+    
+    @Before
+    public void setup() {
+    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
+    }
 
     @Test
     public final void testLikeGift() throws Exception {
-    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	Long numberOfLikes = giftService.likeGift("a6c1e839-d390-4b37-9837-dee63b3cffd9", 1L);
     	assertThat(numberOfLikes, is(equalTo(1L)));
     	
@@ -47,14 +50,12 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
     
     @Test(expected=GiftNotFoundExcetption.class)
     public final void testLikeGiftThatNotExist() throws Exception {
-    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	giftService.likeGift("a6c1e839-d390-4b37-9837-dee63b3cffd1", 1L);
     	fail("Should throw a GiftNotFoundException");
     }
     
     @Test
     public void testCreateGift() throws Exception {
-    	executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	User user = UserBuilder.user()
     			.withId(1L)
