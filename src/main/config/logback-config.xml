@@ -1,0 +1,67 @@
+<configuration scan="true" scanPeriod="10 seconds">
+
+
+	<!-- This writes everything on the standard output. -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>@log_prefix@</Pattern>
+		</layout>
+	</appender>
+	
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.dir}/cradleProfileService_trace</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.dir}/archive/cradleProfileService_trace.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+        <Append>true</Append>
+        <BufferedIO>@log_bufferedIO@</BufferedIO>
+        <BufferSize>16384</BufferSize>
+        <ImmediateFlush>@log_immediateFlush@</ImmediateFlush>
+        <encoder>
+            <pattern>@log_prefix@</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.dir}/cradleProfileService_error</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.dir}/archive/cradleProfileService_error.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>@log_prefix@</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="FILE_JOURNAL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.dir}/cradleProfileService_journal</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.dir}/archive/cradleProfileService_journal.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>@log_prefix_journal@</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="JOURNAL_LOGGING" level="INFO" additivity="false">
+        <appender-ref ref="FILE_JOURNAL"/>
+    </logger>
+
+    <logger name="com.ericsson" level="@log_level@"/>
+
+    <logger name="org.springframework" level="INFO"/>
+
+    <logger name="com.caucho.hessian.client.TraceableHessianURLConnectionFactory" level="INFO"/>
+
+    <root level="ERROR">
+    	@appender_log_console@
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE_ERROR"/>
+    </root>
+    
+</configuration>
