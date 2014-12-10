@@ -1,6 +1,8 @@
 package io.lucci.potlatch.server.web.controller;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,6 +58,7 @@ public class GiftControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup( this.wac ).build();
         user = buildUser();
         UserArgumentResolverMock.setUser(user);
+        reset(giftManager);
     }
     
     @Test
@@ -80,7 +83,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.reportedByMe" ).value( gift.getReportedByMe() ) )
 	        .andExpect( jsonPath( "$.likedByMe" ).value( gift.getLikedByMe() ));
 	        
-//        verify(giftService).getGiftByUuid("1");
+        verify(giftManager).getGiftByUuid("1");
     }
     
     @Test
@@ -97,6 +100,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.code" ).value( ErrorCode.RESOURCE_NOT_FOUND ) )
 	        .andExpect( jsonPath( "$.message" ).value( errorMessage ) );
         
+        verify(giftManager).getGiftByUuid("2");
     }
     
     @Test
@@ -130,7 +134,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.chainMaster" ).value( savedGift.getChainMaster() ) )
 	        .andExpect( jsonPath( "$.status" ).value( savedGift.getStatus() ) );
         
-//        verify(giftService);
+        verify(giftManager).createGift(gift, null, user);
     }
     
     
