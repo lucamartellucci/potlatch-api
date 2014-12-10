@@ -13,7 +13,7 @@ public class ServiceConfig {
 	
 	@Configuration
     @Profile("production")
-    @PropertySource("file:${CONFDIR}/potlatch/service.properties")
+    @PropertySource("file:${CONFDIR}/potlatch/config/potlatch-service.properties")
     static class DbProductionProperties
     { }
     

@@ -31,7 +31,7 @@ public class PersistenceConfig {
 	
     @Configuration
     @Profile("production")
-    @PropertySource("file:${CONFDIR}/potlatch/persistence-mysql.properties")
+    @PropertySource("file:${CONFDIR}/potlatch/config/potlatch-persistence.properties")
     static class DbProductionProperties
     { }
     
