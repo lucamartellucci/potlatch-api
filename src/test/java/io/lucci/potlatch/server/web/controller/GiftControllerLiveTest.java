@@ -66,7 +66,6 @@ public class GiftControllerLiveTest {
 		assertThat(gift.getChainMaster(), is(equalTo(Boolean.TRUE)));
 		assertThat(gift.getTitle(), is(equalTo("title_1")));
 		assertThat(gift.getUri(), is(equalTo("http://www.url1.it")));
-		assertThat(gift.getUser().getId(), is(equalTo(1L)));
 	}
 	
 	@Test
@@ -135,7 +134,11 @@ public class GiftControllerLiveTest {
 		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
 		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
 		assertThat(newGift.getUri(), is(notNullValue()));
-		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.PATH_BASE+GiftApi.PATH_GIFT+"/"+newGift.getUuid()+"/data")));
+		assertThat(newGift.getUri(), is(equalTo(new StringBuilder(TEST_URL)
+			.append(GiftApi.PATH_GIFT)
+			.append("/")
+			.append(newGift.getUuid())
+			.append("/data").toString())));
 		assertTrue(newGift.getChainMaster().booleanValue());
 		
 	}
@@ -152,7 +155,11 @@ public class GiftControllerLiveTest {
 		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
 		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
 		assertThat(newGift.getUri(), is(notNullValue()));
-		assertThat(newGift.getUri(), is(equalTo(TEST_URL+GiftApi.PATH_BASE+GiftApi.PATH_GIFT+"/"+newGift.getUuid()+"/data")));
+		assertThat(newGift.getUri(), is(equalTo(new StringBuilder(TEST_URL)
+			.append(GiftApi.PATH_GIFT)
+			.append("/")
+			.append(newGift.getUuid())
+			.append("/data").toString())));
 		assertFalse(newGift.getChainMaster().booleanValue());
 		
 	}

@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 
-@ActiveProfiles(profiles = { "db-test-mysql" })
+@ActiveProfiles(profiles = { "test" })
 @ContextConfiguration(classes = { PersistenceConfig.class, WebSecurityConfig.class, ServiceConfig.class }, loader = AnnotationConfigContextLoader.class)
 public class SimpleUserDetailsServiceIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	
