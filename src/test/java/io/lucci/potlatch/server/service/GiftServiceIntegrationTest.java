@@ -87,7 +87,7 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
 		assertThat(savedGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
 		assertThat(savedGift.getChainMaster(), is(equalTo(Boolean.TRUE)));
 		
-		savedGift = giftService.createGift(gift , 1L, user);
+		savedGift = giftService.createGift(gift , "f6aa4067-5b21-4d98-b172-307b557187f0", user);
 		logger.info("saved gift is {}", savedGift);
 		
 		assertThat(savedGift, is(notNullValue()));

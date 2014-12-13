@@ -38,7 +38,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 public class GiftManagerIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	
 	final static Logger logger = LoggerFactory.getLogger(GiftManagerIntegrationTest.class);
-	private static final Long CHAIN_MASTER = null;
+	private static final String CHAIN_MASTER = null;
 
     @Autowired
     private GiftManager giftManager;

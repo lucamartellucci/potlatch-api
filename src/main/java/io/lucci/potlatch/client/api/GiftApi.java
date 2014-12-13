@@ -20,7 +20,7 @@ public interface GiftApi {
 
 	public static final String PARAM_DATA = "data";
 	public static final String PARAM_FILE = "file";
-	public static final String PARAM_PARENT_ID = "parentId";
+	public static final String PARAM_PARENT_ID = "parentUuid";
 	public static final String PARAM_SIZE = "size";
 	public static final String PARAM_PAGE = "page";
 	public static final String PARAM_ID = "id";
@@ -44,7 +44,7 @@ public interface GiftApi {
 	public Gift createGift(@Body Gift gift );
 	
 	@POST(PATH_GIFT)
-	public Gift createChainedGift(@Body Gift gift, @Query(PARAM_PARENT_ID) Long parentId );
+	public Gift createChainedGift(@Body Gift gift, @Query(PARAM_PARENT_ID) String parentUuid );
 
 	@Multipart
 	@POST(PATH_GIFT_DATA)

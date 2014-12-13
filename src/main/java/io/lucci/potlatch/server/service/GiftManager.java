@@ -24,5 +24,5 @@ public interface GiftManager {
 	
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException;
 
-	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException;
+	public Gift createGift(Gift gift, String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption;
 }

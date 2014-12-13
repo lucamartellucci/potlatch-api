@@ -80,8 +80,8 @@ public class SimpleGiftManager implements GiftManager {
 	}
 
 	@Override
-	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException {
-		return giftService.createGift(gift, parentId, user);
+	public Gift createGift(Gift gift, String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption {
+		return giftService.createGift(gift, parentUuid, user);
 	}
 	
 }

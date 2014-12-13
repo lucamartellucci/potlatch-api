@@ -147,7 +147,7 @@ public class GiftControllerLiveTest {
 	public void testCreateChainedGift() throws Exception {
 		
 		Gift gift = GiftBuilder.gift().withTitle("I love the sun").withDescription("A really sunny day!").build();
-		Gift newGift = securedGiftApi.createChainedGift(gift, 1L);
+		Gift newGift = securedGiftApi.createChainedGift(gift, "f6aa4067-5b21-4d98-b172-307b557187f0");
 		
 		assertThat(newGift, is(notNullValue()));
 		assertThat(newGift.getUuid(), is(notNullValue()));

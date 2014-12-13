@@ -79,11 +79,11 @@ public class GiftController {
     @RequestMapping(value = "/gift", method = RequestMethod.POST)
     public @ResponseBody Gift createGift(
     		@RequestBody Gift gift, 
-    		@RequestParam( value="parentId", required = false) Long parentId, 
+    		@RequestParam( value="parentUuid", required = false) String parentUuid, 
     		@CurrentUser User user) throws InternalServerErrorException 
     {
     	try {
-    		Gift createdGift = giftManager.createGift(gift, parentId, user);
+    		Gift createdGift = giftManager.createGift(gift, parentUuid, user);
     		return createdGift;
 		} catch (Exception e) {
 			logger.error("Unable to create the gift", e);

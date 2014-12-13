@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriTemplate;
 
 @Service
@@ -129,10 +130,24 @@ public class SimpleGiftService implements GiftService {
 	}
 
 	@Override
-	public Gift createGift(Gift gift, Long parentId, User user) throws GiftServiceException {
+	public Gift createGift(Gift gift, String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption {
 		
 		try {
-			logger.debug("Create gift: {} for user: {}", gift, user);
+			
+			Long parentId = null;
+			if (StringUtils.isEmpty(parentUuid)) {
+				logger.info("Create the new toplevel gift: {} for user: {}", gift, user);
+			} else {
+				logger.info("Create the new child gift: {} for user: {}", gift, user);
+				logger.info("Search the parent gift with id [{}]", parentUuid);
+				GiftDBTO giftDBTO = giftRepository.findByUuid(parentUuid);
+				if (giftDBTO == null) {
+					throw new GiftNotFoundExcetption(new StringBuilder("Unable to find the gift with id [").append(parentUuid).append("]").toString());
+				} else {
+					parentId = giftDBTO.getId();
+					logger.debug("Parent found! parentId is [{}]",giftDBTO.getId());
+				}
+			}
 			
 			final String uuid = UUID.randomUUID().toString();
 			final String uri = new UriTemplate("{SERVER_PATH}/api/v1/gift/{UUID}/data").expand(serverPath, uuid).toString();
@@ -149,6 +164,8 @@ public class SimpleGiftService implements GiftService {
 			GiftDBTO savedGiftDBTO = giftRepository.save(giftDBTO);
 			return giftAdapter.dbtoToTo(savedGiftDBTO, false);
 			
+		} catch (GiftNotFoundExcetption e) {	
+			throw e;
 		} catch (Exception e) {
 			throw new GiftServiceException("Unable to create the gift",e);
 		}
