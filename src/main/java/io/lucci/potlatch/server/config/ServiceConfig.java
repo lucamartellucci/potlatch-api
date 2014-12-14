@@ -1,4 +1,4 @@
-package io.lucci.potlatch.server.spring;
+package io.lucci.potlatch.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

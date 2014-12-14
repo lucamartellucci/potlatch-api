@@ -6,6 +6,17 @@
 
     <display-name>Potlatch REST API service</display-name>
     
+    <!-- Logback initialization -->
+    <context-param>
+        <param-name>logConfigLocation</param-name>
+        <param-value>file:${CONFDIR}/potlatch/config/logback-config.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>io.lucci.potlatch.server.config.LogBackContextSelectorListener</listener-class>
+    </listener>
+    
+    
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -25,7 +36,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>io.lucci.potlatch.server.spring</param-value>
+            <param-value>io.lucci.potlatch.server.config</param-value>
         </init-param>
         <init-param>
             <param-name>contextClass</param-name>

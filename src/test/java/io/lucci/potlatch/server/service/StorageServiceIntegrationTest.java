@@ -1,10 +1,10 @@
 package io.lucci.potlatch.server.service;
 
 import static org.junit.Assert.assertNotNull;
+import io.lucci.potlatch.server.config.PersistenceConfig;
+import io.lucci.potlatch.server.config.ServiceConfig;
 import io.lucci.potlatch.server.service.StorageService;
 import io.lucci.potlatch.server.service.StorageService.StorageAction;
-import io.lucci.potlatch.server.spring.PersistenceConfig;
-import io.lucci.potlatch.server.spring.ServiceConfig;
 
 import java.io.File;
 import java.io.FileInputStream;

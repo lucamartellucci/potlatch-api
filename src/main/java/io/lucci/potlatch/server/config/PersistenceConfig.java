@@ -1,4 +1,4 @@
-package io.lucci.potlatch.server.spring;
+package io.lucci.potlatch.server.config;
 
 import java.util.Properties;
 

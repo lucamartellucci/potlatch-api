@@ -1,4 +1,4 @@
-package io.lucci.potlatch.server.spring;
+package io.lucci.potlatch.server.config;
 
 import io.lucci.potlatch.server.web.controller.resolver.PageableArgumentResolver;
 import io.lucci.potlatch.server.web.controller.resolver.UserArgumentResolver;

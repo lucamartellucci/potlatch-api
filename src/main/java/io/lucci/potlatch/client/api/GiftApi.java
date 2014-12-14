@@ -1,6 +1,6 @@
 package io.lucci.potlatch.client.api;
 
-import io.lucci.potlatch.server.web.model.Gift;
+import io.lucci.potlatch.client.model.Gift;
 
 import java.util.List;
 

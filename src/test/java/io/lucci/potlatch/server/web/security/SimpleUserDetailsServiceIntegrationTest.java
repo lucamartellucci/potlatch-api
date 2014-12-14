@@ -6,9 +6,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
-import io.lucci.potlatch.server.spring.PersistenceConfig;
-import io.lucci.potlatch.server.spring.ServiceConfig;
-import io.lucci.potlatch.server.spring.WebSecurityConfig;
+import io.lucci.potlatch.server.config.PersistenceConfig;
+import io.lucci.potlatch.server.config.ServiceConfig;
+import io.lucci.potlatch.server.config.WebSecurityConfig;
 import io.lucci.potlatch.server.web.security.SimpleUserDetailsService;
 
 import org.junit.Test;

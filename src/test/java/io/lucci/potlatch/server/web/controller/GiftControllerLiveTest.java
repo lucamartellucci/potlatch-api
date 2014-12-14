@@ -9,8 +9,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import io.lucci.potlatch.client.api.GiftApi;
 import io.lucci.potlatch.client.api.GiftApiFactory;
-import io.lucci.potlatch.server.web.model.Gift;
-import io.lucci.potlatch.server.web.model.GiftBuilder;
+import io.lucci.potlatch.client.model.Gift;
+import io.lucci.potlatch.client.model.GiftBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;

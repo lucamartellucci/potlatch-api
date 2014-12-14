@@ -4,9 +4,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import io.lucci.potlatch.server.config.PersistenceConfig;
 import io.lucci.potlatch.server.persistence.model.GiftDBTO;
 import io.lucci.potlatch.server.persistence.repository.GiftDBTORepository;
-import io.lucci.potlatch.server.spring.PersistenceConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
