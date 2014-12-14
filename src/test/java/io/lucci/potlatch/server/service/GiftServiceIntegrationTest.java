@@ -3,6 +3,7 @@ package io.lucci.potlatch.server.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import io.lucci.potlatch.server.config.PersistenceConfig;
@@ -14,12 +15,14 @@ import io.lucci.potlatch.server.web.model.User;
 import io.lucci.potlatch.server.web.model.UserBuilder;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -98,6 +101,21 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
 		assertThat(savedGift.getTimestamp(), is(notNullValue()));
 		assertThat(savedGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
 		assertThat(savedGift.getChainMaster(), is(equalTo(Boolean.FALSE)));
+    }
+    
+    @Test
+    public final void testFindAllGifts() throws Exception {
+    	Pageable p = null;
+		User user = UserBuilder.user().withId(1L).withBlockInappropriate(Boolean.TRUE).build();
+		
+		List<Gift> gifts = giftService.findAllGifts(user, p);
+		logger.debug("Found gifts: {}", gifts);
+		
+		assertThat(gifts, hasSize(2));
+		assertThat(gifts.get(0).getTitle(), is("title_1"));
+		assertThat(gifts.get(0).getDescription(), is("description_1"));
+		assertThat(gifts.get(0).getChainMaster(), is(true));
+    	
     }
 
 }

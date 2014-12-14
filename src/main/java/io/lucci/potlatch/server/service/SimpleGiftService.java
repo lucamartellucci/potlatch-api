@@ -66,8 +66,8 @@ public class SimpleGiftService implements GiftService {
 	@Override
 	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException {
 		try {
-			logger.info("Loading gifts for user []", user.getId());
-			logger.info("Block inappropriate []", user.getBlockInappropriate());
+			logger.info("Loading gifts for user [{}]", user.getId());
+			logger.info("Block inappropriate [{}]", user.getBlockInappropriate());
 			List<GiftDBTO> gifts = null;
 			if (p != null) {
 				Page<GiftDBTO> page = null;
@@ -87,7 +87,7 @@ public class SimpleGiftService implements GiftService {
 					gifts = giftRepository.findAllByUserId(user.getId());
 				}
 			}
-			return giftAdapter.dbtoToTo(gifts, false);
+			return giftAdapter.dbtoToTo(gifts, true);
 		} catch (Exception e) {
 			throw new GiftServiceException(new StringBuilder("Unable to retrieve gifts for user [").append(user.getId()).append("]").toString(),e);
 		}

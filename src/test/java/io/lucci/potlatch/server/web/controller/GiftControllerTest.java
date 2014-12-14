@@ -1,8 +1,8 @@
 package io.lucci.potlatch.server.web.controller;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.GsonBuilderUtils;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -62,7 +61,6 @@ public class GiftControllerTest {
     }
     
     @Test
-    @DirtiesContext
     public void testFindById() throws Exception {
     	
 		Gift gift = buildGift(user);
@@ -87,7 +85,6 @@ public class GiftControllerTest {
     }
     
     @Test
-    @DirtiesContext
     public void testFindByIdNotExistingGift() throws Exception {
     	
 		final String errorMessage = "Unable to find the gift with id [2]";
@@ -104,7 +101,6 @@ public class GiftControllerTest {
     }
     
     @Test
-    @DirtiesContext
     public void testCreateGift() throws Exception {
     	
 		Gift gift = GiftBuilder.gift().withTitle("title001").withDescription("desc001").build();
@@ -136,6 +132,8 @@ public class GiftControllerTest {
         
         verify(giftManager).createGift(gift, null, user);
     }
+    
+    
     
     
 
