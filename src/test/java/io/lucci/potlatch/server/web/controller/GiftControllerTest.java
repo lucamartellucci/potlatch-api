@@ -1,5 +1,6 @@
 package io.lucci.potlatch.server.web.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,10 +15,13 @@ import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.web.controller.exception.ErrorCode;
 import io.lucci.potlatch.server.web.model.Gift;
 import io.lucci.potlatch.server.web.model.GiftBuilder;
+import io.lucci.potlatch.server.web.model.PaginatorResult;
+import io.lucci.potlatch.server.web.model.SimplePaginator;
 import io.lucci.potlatch.server.web.model.User;
 import io.lucci.potlatch.server.web.model.UserBuilder;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Before;
@@ -82,6 +86,42 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.likedByMe" ).value( gift.getLikedByMe() ));
 	        
         verify(giftManager).getGiftByUuid("1");
+    }
+    
+    
+    @Test
+    public void testRetrieveGifts() throws Exception {
+    	
+		Gift gift = buildGift(user);
+	
+		SimplePaginator paginator = new SimplePaginator(0, 5);
+		PaginatorResult<Gift> paginatorModel = new PaginatorResult<Gift>();
+		paginatorModel.setResult(Arrays.asList(gift));
+		paginatorModel.setCurrentPage(0);
+		paginatorModel.setPageSize(5);
+		paginatorModel.setTotalPages(1);
+		
+		when(giftManager.findAllGifts(user, paginator)).thenReturn(paginatorModel);
+    	
+        this.mockMvc.perform( get( "/api/v1/gift?page=0&size=5" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
+	        .andExpect( status().isOk() )
+	        .andExpect( content().contentType( "application/json;charset=UTF-8" ) )
+	        .andDo( print() )
+	        .andExpect( jsonPath( "$.currentPage" ).value(0) )
+	        .andExpect( jsonPath( "$.pageSize" ).value(5) )
+	        .andExpect( jsonPath( "$.totalPages" ).value(1) )
+	        .andExpect( jsonPath( "$.result", hasSize(1)) )
+	        .andExpect( jsonPath( "$.result[0].uuid" ).value( gift.getUuid() ) )
+	        .andExpect( jsonPath( "$.result[0].title" ).value( gift.getTitle() ) )
+	        .andExpect( jsonPath( "$.result[0].description" ).value( gift.getDescription() ) )
+	        .andExpect( jsonPath( "$.result[0].timestamp" ).value( gift.getTimestamp().getTime() ) )
+	        .andExpect( jsonPath( "$.result[0].chainMaster" ).value( gift.getChainMaster() ) )
+	        .andExpect( jsonPath( "$.result[0].status" ).value( gift.getStatus() ) )
+	        .andExpect( jsonPath( "$.result[0].numberOfLikes" ).value( gift.getNumberOfLikes().intValue() ) )
+	        .andExpect( jsonPath( "$.result[0].reportedByMe" ).value( gift.getReportedByMe() ) )
+	        .andExpect( jsonPath( "$.result[0].likedByMe" ).value( gift.getLikedByMe() ));
+	        
+        verify(giftManager).findAllGifts(user, paginator);
     }
     
     @Test

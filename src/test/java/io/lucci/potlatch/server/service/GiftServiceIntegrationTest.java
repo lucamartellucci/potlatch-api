@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -105,10 +104,9 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
     
     @Test
     public final void testFindAllGifts() throws Exception {
-    	Pageable p = null;
 		User user = UserBuilder.user().withId(1L).withBlockInappropriate(Boolean.TRUE).build();
 		
-		List<Gift> gifts = giftService.findAllGifts(user, p);
+		List<Gift> gifts = giftService.findAllGifts(user);
 		logger.debug("Found gifts: {}", gifts);
 		
 		assertThat(gifts, hasSize(2));

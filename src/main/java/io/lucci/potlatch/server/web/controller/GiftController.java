@@ -7,8 +7,10 @@ import io.lucci.potlatch.server.service.exception.GiftServiceException;
 import io.lucci.potlatch.server.web.controller.exception.InternalServerErrorException;
 import io.lucci.potlatch.server.web.controller.exception.ResourceNotFoundException;
 import io.lucci.potlatch.server.web.controller.resolver.CurrentUser;
-import io.lucci.potlatch.server.web.controller.resolver.PageReq;
+import io.lucci.potlatch.server.web.controller.resolver.Paginator;
 import io.lucci.potlatch.server.web.model.Gift;
+import io.lucci.potlatch.server.web.model.PaginatorResult;
+import io.lucci.potlatch.server.web.model.SimplePaginator;
 import io.lucci.potlatch.server.web.model.User;
 
 import java.io.IOException;
@@ -21,7 +23,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,13 +63,24 @@ public class GiftController {
     }
     
     @RequestMapping(value = "/gift", method = RequestMethod.GET)
-    public @ResponseBody List<Gift> retrieveGifts(@CurrentUser User user, @PageReq Pageable p) throws InternalServerErrorException {
+    public @ResponseBody PaginatorResult<Gift> retrieveGifts(@CurrentUser User user, @Paginator SimplePaginator paginator) throws InternalServerErrorException {
     	try {
-
+    		PaginatorResult<Gift> paginatorResult = null;
+    		
     		logger.info("Retrieve gifts for user [{}]", user.getUsername());
-    		List<Gift> gifts = giftManager.findAllGifts(user, p);
-    		logger.info("Found [{}] gifts", gifts.size());
-    		return gifts;
+    		
+    		if (paginator == null) {
+    			logger.info("Retrieve all gifts");
+    			List<Gift> gifts = giftManager.findAllGifts(user);
+    			paginatorResult = new PaginatorResult<Gift>();
+    			paginatorResult.setResult(gifts);
+    		} else {
+    			logger.info("Retrieve paginated gifts: {}", paginator);
+    			paginatorResult = giftManager.findAllGifts(user, paginator);
+    		}
+    		
+    		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
+    		return paginatorResult;
     		
 		} catch (Exception e) {
 			logger.error("Unable load the gifts", e);

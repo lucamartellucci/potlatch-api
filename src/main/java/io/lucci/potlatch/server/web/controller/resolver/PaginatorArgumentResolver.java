@@ -1,22 +1,23 @@
 package io.lucci.potlatch.server.web.controller.resolver;
 
+import io.lucci.potlatch.server.web.model.SimplePaginator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 
-public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
+public class PaginatorArgumentResolver implements HandlerMethodArgumentResolver {
 	
-    private static Logger logger = LoggerFactory.getLogger( PageableArgumentResolver.class );
+    private static Logger logger = LoggerFactory.getLogger( PaginatorArgumentResolver.class );
 
     @Override
     public boolean supportsParameter( MethodParameter methodParameter ) {
-        return methodParameter.getParameterAnnotation( PageReq.class ) != null;
+        return methodParameter.getParameterAnnotation( Paginator.class ) != null;
     }
 
     @Override
@@ -31,9 +32,9 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
         if ( nativeWebRequest.getParameter( "size" ) != null ) {
             size = Integer.valueOf( nativeWebRequest.getParameter( "size" ) );
         }
-        PageRequest pageRequest = null;
+        SimplePaginator pageRequest = null;
         if (size != null && page != null) {
-        	pageRequest = new PageRequest( page, size );
+        	pageRequest = new SimplePaginator( page, size );
         }
         logger.debug( "argument resolved as {}", pageRequest );
         return pageRequest;

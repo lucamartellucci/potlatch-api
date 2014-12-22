@@ -3,8 +3,10 @@ package io.lucci.potlatch.server.service;
 import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.service.exception.GiftServiceException;
 import io.lucci.potlatch.server.web.model.Gift;
-import io.lucci.potlatch.server.web.model.User;
 import io.lucci.potlatch.server.web.model.Gift.GiftStatus;
+import io.lucci.potlatch.server.web.model.PaginatorResult;
+import io.lucci.potlatch.server.web.model.SimplePaginator;
+import io.lucci.potlatch.server.web.model.User;
 
 import java.io.InputStream;
 import java.util.List;
@@ -12,7 +14,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -75,8 +76,13 @@ public class SimpleGiftManager implements GiftManager {
 	}
 
 	@Override
-	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException {
-		return giftService.findAllGifts(user, p);
+	public PaginatorResult<Gift> findAllGifts(User user, SimplePaginator paginator) throws GiftServiceException {
+		return giftService.findAllGifts(user, paginator);
+	}
+	
+	@Override
+	public List<Gift> findAllGifts(User user) throws GiftServiceException {
+		return giftService.findAllGifts(user);
 	}
 
 	@Override

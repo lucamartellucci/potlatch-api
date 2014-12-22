@@ -9,6 +9,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import io.lucci.potlatch.client.api.GiftApi;
 import io.lucci.potlatch.client.api.GiftApiFactory;
+import io.lucci.potlatch.client.api.PaginatorResult;
 import io.lucci.potlatch.client.model.Gift;
 import io.lucci.potlatch.client.model.GiftBuilder;
 
@@ -96,11 +97,13 @@ public class GiftControllerLiveTest {
 	public void testRetrievePagedGifts() throws Exception {
 		Integer pageNumber = 0;
 		Integer pageSize = 1;
-		List<Gift> gifts = securedGiftApi.getGifts(pageNumber, pageSize);
+		PaginatorResult<Gift> paginatorResult = securedGiftApi.getGifts(pageNumber, pageSize);
+		List<Gift> gifts = paginatorResult.getResult();
 		assertThat(gifts.size(), is(equalTo(1)));
 		assertThat(gifts.get(0).getUuid(), is(equalTo("f6aa4067-5b21-4d98-b172-307b557187f0")));
 		
-		gifts = securedGiftApi.getGifts(++pageNumber, pageSize);
+		paginatorResult = securedGiftApi.getGifts(++pageNumber, pageSize);
+		gifts = paginatorResult.getResult();
 		assertThat(gifts.size(), is(equalTo(1)));
 		assertThat(gifts.get(0).getUuid(), is(equalTo("5a4dcd02-1e6d-4c4d-a3a0-2e28cb631d21")));
 	}
@@ -161,7 +164,6 @@ public class GiftControllerLiveTest {
 			.append(newGift.getUuid())
 			.append("/data").toString())));
 		assertFalse(newGift.getChainMaster().booleanValue());
-		
 	}
 	
 	

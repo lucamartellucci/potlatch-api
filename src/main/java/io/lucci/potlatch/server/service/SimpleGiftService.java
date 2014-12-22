@@ -8,8 +8,10 @@ import io.lucci.potlatch.server.persistence.repository.UserActionDBTORepository;
 import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.service.exception.GiftServiceException;
 import io.lucci.potlatch.server.web.model.Gift;
-import io.lucci.potlatch.server.web.model.User;
 import io.lucci.potlatch.server.web.model.Gift.GiftStatus;
+import io.lucci.potlatch.server.web.model.PaginatorResult;
+import io.lucci.potlatch.server.web.model.SimplePaginator;
+import io.lucci.potlatch.server.web.model.User;
 import io.lucci.potlatch.server.web.model.adapter.GiftAdapter;
 
 import java.util.Date;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -64,29 +67,48 @@ public class SimpleGiftService implements GiftService {
 	}
 
 	@Override
-	public List<Gift> findAllGifts(User user, Pageable p) throws GiftServiceException {
+	public PaginatorResult<Gift> findAllGifts(User user, SimplePaginator paginator) throws GiftServiceException {
+		try {
+			Pageable p = new PageRequest(paginator.getPage(), paginator.getSize());
+			
+			logger.info("Loading gifts for user [{}]", user.getId());
+			logger.info("Block inappropriate [{}]", user.getBlockInappropriate());
+
+			Page<GiftDBTO> page = null;
+			logger.info("Loading page [], with size []", p.getPageNumber(), p.getPageSize());
+			if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
+				page = giftRepository.findAllByUserIdFilterInappropriate(user.getId(),p);
+			} else {
+				page = giftRepository.findAllByUserId(user.getId(), p);
+			}
+			
+			PaginatorResult<Gift> result = new PaginatorResult<>();
+			
+			List<Gift> adaptedGifts = giftAdapter.dbtoToTo(page.getContent(), true);
+			result.setResult(adaptedGifts);
+			result.setTotalPages(page.getTotalPages());
+			result.setPageSize(page.getSize());
+			result.setCurrentPage(page.getNumber());
+			return result;
+			
+		} catch (Exception e) {
+			throw new GiftServiceException(new StringBuilder("Unable to retrieve gifts for user [").append(user.getId()).append("]").toString(),e);
+		}
+	}
+	
+	@Override
+	public List<Gift> findAllGifts(User user) throws GiftServiceException {
 		try {
 			logger.info("Loading gifts for user [{}]", user.getId());
 			logger.info("Block inappropriate [{}]", user.getBlockInappropriate());
+			
 			List<GiftDBTO> gifts = null;
-			if (p != null) {
-				Page<GiftDBTO> page = null;
-				logger.info("Loading page [], with size []", p.getPageNumber(), p.getPageSize());
-				if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
-					page = giftRepository.findAllByUserIdFilterInappropriate(user.getId(),p);
-				} else {
-					page = giftRepository.findAllByUserId(user.getId(), p);
-				}
-				gifts = page.getContent();
+			if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
+				gifts = giftRepository.findAllByUserIdFilterInappropriate(user.getId());
 			} else {
-				
-				logger.info("Loading full list");
-				if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
-					gifts = giftRepository.findAllByUserIdFilterInappropriate(user.getId());
-				} else {
-					gifts = giftRepository.findAllByUserId(user.getId());
-				}
+				gifts = giftRepository.findAllByUserId(user.getId());
 			}
+			
 			return giftAdapter.dbtoToTo(gifts, true);
 		} catch (Exception e) {
 			throw new GiftServiceException(new StringBuilder("Unable to retrieve gifts for user [").append(user.getId()).append("]").toString(),e);

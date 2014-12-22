@@ -38,7 +38,7 @@ public interface GiftApi {
 	public List<Gift> getGifts();
 	
 	@GET(PATH_GIFT)
-	public List<Gift> getGifts(@Query(PARAM_PAGE) Integer page, @Query(PARAM_SIZE) Integer size);
+	public PaginatorResult<Gift> getGifts(@Query(PARAM_PAGE) Integer page, @Query(PARAM_SIZE) Integer size);
 	
 	@POST(PATH_GIFT)
 	public Gift createGift(@Body Gift gift );
