@@ -3,15 +3,16 @@ package io.lucci.potlatch.server.web.controller;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import io.lucci.potlatch.client.api.GiftApi;
 import io.lucci.potlatch.client.api.GiftApiFactory;
-import io.lucci.potlatch.client.api.PaginatorResult;
 import io.lucci.potlatch.client.model.Gift;
 import io.lucci.potlatch.client.model.GiftBuilder;
+import io.lucci.potlatch.client.model.PaginatorResult;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +37,6 @@ public class GiftControllerLiveTest {
 	
 	private final Logger logger = LoggerFactory.getLogger(GiftControllerLiveTest.class);
 	
-	private GiftApi giftApi;
 	private GiftApi securedGiftApi;
 	
 	private final String USERNAME = "luca";
@@ -46,7 +46,6 @@ public class GiftControllerLiveTest {
 	@Before
 	public void setup(){
 		GiftApiFactory giftApiFactory = new GiftApiFactory(); 
-		giftApi=giftApiFactory.getSimpleGiftApi(TEST_URL);
 		securedGiftApi=giftApiFactory.getSecuredGiftApi(TEST_URL, USERNAME, PASSWORD, CLIENT_ID);
 	}
 	
@@ -96,16 +95,21 @@ public class GiftControllerLiveTest {
 	@Test
 	public void testRetrievePagedGifts() throws Exception {
 		Integer pageNumber = 0;
-		Integer pageSize = 1;
+		Integer pageSize = 8;
 		PaginatorResult<Gift> paginatorResult = securedGiftApi.getGifts(pageNumber, pageSize);
-		List<Gift> gifts = paginatorResult.getResult();
-		assertThat(gifts.size(), is(equalTo(1)));
-		assertThat(gifts.get(0).getUuid(), is(equalTo("f6aa4067-5b21-4d98-b172-307b557187f0")));
+		assertThat(paginatorResult, is(notNullValue()));
+		assertThat(paginatorResult.getCurrentPage(), is(equalTo(pageNumber)));
+		assertThat(paginatorResult.getPageSize(), is(equalTo(pageSize)));
+		assertThat(paginatorResult.getTotalPages(), is(greaterThan(1)));
+		assertThat(paginatorResult.getResult(), is(notNullValue()));
+		assertThat(paginatorResult.getResult().size(), is(equalTo(pageSize)));
+		
 		
 		paginatorResult = securedGiftApi.getGifts(++pageNumber, pageSize);
-		gifts = paginatorResult.getResult();
-		assertThat(gifts.size(), is(equalTo(1)));
-		assertThat(gifts.get(0).getUuid(), is(equalTo("5a4dcd02-1e6d-4c4d-a3a0-2e28cb631d21")));
+		assertThat(paginatorResult.getPageSize(), is(equalTo(pageSize)));
+		assertThat(paginatorResult.getTotalPages(), is(greaterThan(1)));
+		assertThat(paginatorResult.getResult(), is(notNullValue()));
+		assertThat(paginatorResult.getResult().size(), is(equalTo(1)));
 	}
 	
 	@Test

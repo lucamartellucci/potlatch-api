@@ -1,5 +1,6 @@
 package io.lucci.potlatch.server.service;
 
+import io.lucci.potlatch.server.service.exception.GiftNotChainExcetption;
 import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.service.exception.GiftServiceException;
 import io.lucci.potlatch.server.web.model.Gift;
@@ -88,6 +89,32 @@ public class SimpleGiftManager implements GiftManager {
 	@Override
 	public Gift createGift(Gift gift, String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption {
 		return giftService.createGift(gift, parentUuid, user);
+	}
+
+	@Override
+	public List<Gift> findAllChainedGifts(String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption, GiftNotChainExcetption {
+		checkGiftChainUuid(parentUuid);
+		return giftService.findAllGifts(parentUuid, user);
+	}
+
+	@Override
+	public PaginatorResult<Gift> findAllChainedGifts(String parentUuid, User user, SimplePaginator paginator) throws GiftServiceException,
+			GiftNotFoundExcetption, GiftNotChainExcetption {
+		
+		checkGiftChainUuid(parentUuid);
+		return giftService.findAllGifts(parentUuid, user, paginator);
+	}
+
+	private void checkGiftChainUuid(String parentUuid)
+			throws GiftServiceException, GiftNotFoundExcetption,
+			GiftNotChainExcetption {
+		Gift parentGift = giftService.getGiftByUuid(parentUuid);
+		if (parentGift == null) {
+			throw new GiftNotFoundExcetption(new StringBuilder("Unable to find the Chain with id [").append(parentUuid).append("]").toString());
+		}
+		if (!parentGift.getChainMaster()) {
+			throw new GiftNotChainExcetption(new StringBuilder("The Gift with id [").append(parentUuid).append("] is not a Chain").toString());
+		}
 	}
 	
 }

@@ -145,4 +145,32 @@ public class GiftController {
 		} 
     }
     
+    
+    @RequestMapping(value = "/gift/{id}/chain", method = RequestMethod.GET)
+    public @ResponseBody PaginatorResult<Gift> retrieveGiftChain(@CurrentUser User user, @Paginator SimplePaginator paginator, @PathVariable String id) 
+    		throws InternalServerErrorException {
+    	try {
+    		PaginatorResult<Gift> paginatorResult = null;
+    		
+    		logger.info("Retrieve gifts for user [{}]", user.getUsername());
+    		
+    		if (paginator == null) {
+    			logger.info("Retrieve gifts from chain id [{}]", id);
+    			List<Gift> gifts = giftManager.findAllChainedGifts(id, user);
+    			paginatorResult = new PaginatorResult<Gift>();
+    			paginatorResult.setResult(gifts);
+    		} else {
+    			logger.info("Retrieve gifts from chain id [{}], paginator [{}]", id, paginator);
+    			paginatorResult = giftManager.findAllChainedGifts(id, user, paginator);
+    		}
+    		
+    		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
+    		return paginatorResult;
+    		
+		} catch (Exception e) {
+			logger.error("Unable load the gifts", e);
+			throw new InternalServerErrorException("Unable load the gifts", e);
+		}
+    }
+    
 }

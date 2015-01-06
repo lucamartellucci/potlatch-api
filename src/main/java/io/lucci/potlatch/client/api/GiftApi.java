@@ -1,6 +1,7 @@
 package io.lucci.potlatch.client.api;
 
 import io.lucci.potlatch.client.model.Gift;
+import io.lucci.potlatch.client.model.PaginatorResult;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package io.lucci.potlatch.client.api;
+package io.lucci.potlatch.client.model;
 
 import java.io.Serializable;
 import java.util.List;

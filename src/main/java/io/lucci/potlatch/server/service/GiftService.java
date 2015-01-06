@@ -30,4 +30,8 @@ public interface GiftService {
 
 	public Gift updateGiftStatus(String uuid, GiftStatus status) throws GiftServiceException, GiftNotFoundExcetption;
 
+	public List<Gift> findAllGifts(String parentUuid, User user) throws GiftServiceException;
+
+	public PaginatorResult<Gift> findAllGifts(String parentUuid, User user, SimplePaginator paginator) throws GiftServiceException;
+
 }
