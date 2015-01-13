@@ -67,12 +67,12 @@ public class GiftManagerIntegrationTest extends AbstractTransactionalJUnit4Sprin
 		
 		// store data
 		try (FileInputStream in = new FileInputStream(new File(this.getClass().getResource("/images/lollipop.jpg").getFile()));) {
-			doNothing().when(storageService).storeObject(in, buildGiftObjectName(gift));
+			doNothing().when(storageService).storeGiftData(in, buildGiftObjectName(gift));
 			
 			// do test
 			savedGift = giftManager.setGiftData(savedGift.getUuid(), in);
 			
-			verify(storageService).storeObject(in, buildGiftObjectName(savedGift));
+			verify(storageService).storeGiftData(in, buildGiftObjectName(savedGift));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -100,7 +100,7 @@ public class GiftManagerIntegrationTest extends AbstractTransactionalJUnit4Sprin
 		// store data
 		try (FileInputStream in = new FileInputStream(new File(this.getClass().getResource("/images/lollipop.jpg").getFile()));) {
 			
-			doThrow(new StorageServiceException()).when(storageService).storeObject(in, buildGiftObjectName(gift));
+			doThrow(new StorageServiceException()).when(storageService).storeGiftData(in, buildGiftObjectName(gift));
 			savedGift = giftManager.setGiftData(savedGift.getUuid(), in);
 		} catch (StorageServiceException e) {
 			

@@ -101,7 +101,7 @@ public class GiftControllerTest {
 		paginatorModel.setPageSize(5);
 		paginatorModel.setTotalPages(1);
 		
-		when(giftManager.findAllGifts(user, paginator)).thenReturn(paginatorModel);
+		when(giftManager.loadGifts(user, paginator)).thenReturn(paginatorModel);
     	
         this.mockMvc.perform( get( "/api/v1/gift?page=0&size=5" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
 	        .andExpect( status().isOk() )
@@ -121,7 +121,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.result[0].reportedByMe" ).value( gift.getReportedByMe() ) )
 	        .andExpect( jsonPath( "$.result[0].likedByMe" ).value( gift.getLikedByMe() ));
 	        
-        verify(giftManager).findAllGifts(user, paginator);
+        verify(giftManager).loadGifts(user, paginator);
     }
     
     @Test

@@ -1,6 +1,7 @@
 package io.lucci.potlatch.server.service;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 import org.slf4j.Logger;
@@ -35,29 +36,29 @@ public class S3StorageService implements StorageService {
 	
 	
 	@Override
-	public URL prepareUrl(StorageAction action, String objectName) throws StorageServiceException {
+	public URI buildGiftUri(StorageAction action, String uuid) throws StorageServiceException {
 		
 		AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(accessKeyId, secretAccessKey));
 		
 		try {
-			logger.info("Generating pre-signed URL for gift [{}]", objectName);
+			logger.info("Generating pre-signed URL for gift [{}]", uuid);
 			
 			java.util.Date expiration = new java.util.Date();
 			long milliSeconds = expiration.getTime();
 			milliSeconds += 1000 * 60 * 60; // Add 1 hour.
 			expiration.setTime(milliSeconds);
 			
-			String objectKey = String.format("%s.jpg", objectName);
+			String objectKey = String.format("%s.jpg", uuid);
 			
 			GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, objectKey);
 			generatePresignedUrlRequest.setMethod(fromAction(action)); 
 			generatePresignedUrlRequest.setExpiration(expiration);
 
 			URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest); 
-			return url;
+			return url.toURI();
 			
 		} catch (Exception e) {
-			throw new StorageServiceException(new StringBuilder("Unable to generate a presigne URL for object [").append(objectName).append("]").toString(), e);
+			throw new StorageServiceException(new StringBuilder("Unable to generate a presigne URL for object [").append(uuid).append("]").toString(), e);
 		}
 	}
 	
@@ -73,29 +74,29 @@ public class S3StorageService implements StorageService {
 	}
 
 	@Override
-	public void storeObject(InputStream data, String objectName) throws StorageServiceException {
+	public void storeGiftData(InputStream data, String uuid) throws StorageServiceException {
 		
 		AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(accessKeyId, secretAccessKey));
 		try {
-			PutObjectRequest request = new PutObjectRequest(bucketName, objectName, data, new ObjectMetadata());
+			PutObjectRequest request = new PutObjectRequest(bucketName, uuid, data, new ObjectMetadata());
 			PutObjectResult response = s3client.putObject(request);
 			logger.info("Uploaded object eTag is [{}]",response.getETag());
 		} catch (Exception e) {
-			throw new StorageServiceException(new StringBuilder("Unable to store object [").append(objectName).append("]").toString(), e);
+			throw new StorageServiceException(new StringBuilder("Unable to store object [").append(uuid).append("]").toString(), e);
 		}
 		
 	}
 
 	@Override
-	public InputStream readObject(String objectName) throws StorageServiceException {
+	public InputStream loadGiftData(String uuid) throws StorageServiceException {
 		AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(accessKeyId, secretAccessKey));
 		try {
-			GetObjectRequest request = new GetObjectRequest(bucketName, objectName);
+			GetObjectRequest request = new GetObjectRequest(bucketName, uuid);
 			S3Object object = s3client.getObject(request);
 			logger.info("Downloaded object metadata is [{}]",object.getObjectMetadata());
 			return object.getObjectContent();
 		} catch (Exception e) {
-			throw new StorageServiceException(new StringBuilder("Unable to download object [").append(objectName).append("]").toString(), e);
+			throw new StorageServiceException(new StringBuilder("Unable to download object [").append(uuid).append("]").toString(), e);
 		}
 	}
 

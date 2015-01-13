@@ -15,7 +15,7 @@ import io.lucci.potlatch.server.web.model.User;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -67,17 +67,8 @@ public class GiftController {
     	try {
     		PaginatorResult<Gift> paginatorResult = null;
     		
-    		logger.info("Retrieve gifts for user [{}]", user.getUsername());
-    		
-    		if (paginator == null) {
-    			logger.info("Retrieve all gifts");
-    			List<Gift> gifts = giftManager.findAllGifts(user);
-    			paginatorResult = new PaginatorResult<Gift>();
-    			paginatorResult.setResult(gifts);
-    		} else {
-    			logger.info("Retrieve paginated gifts: {}", paginator);
-    			paginatorResult = giftManager.findAllGifts(user, paginator);
-    		}
+			logger.info("Retrieve gifts for user [{}], paginator [{}]", paginator);
+			paginatorResult = giftManager.loadGifts(user, paginator);
     		
     		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
     		return paginatorResult;
@@ -153,16 +144,8 @@ public class GiftController {
     		PaginatorResult<Gift> paginatorResult = null;
     		
     		logger.info("Retrieve gifts for user [{}]", user.getUsername());
-    		
-    		if (paginator == null) {
-    			logger.info("Retrieve gifts from chain id [{}]", id);
-    			List<Gift> gifts = giftManager.findAllChainedGifts(id, user);
-    			paginatorResult = new PaginatorResult<Gift>();
-    			paginatorResult.setResult(gifts);
-    		} else {
-    			logger.info("Retrieve gifts from chain id [{}], paginator [{}]", id, paginator);
-    			paginatorResult = giftManager.findAllChainedGifts(id, user, paginator);
-    		}
+    		logger.info("Retrieve gifts for user [{}], chain id [{}], paginator [{}]", Arrays.asList(user.getUsername(),id, paginator));
+			paginatorResult = giftManager.loadChain(id, user, paginator);
     		
     		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
     		return paginatorResult;

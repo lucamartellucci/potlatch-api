@@ -9,7 +9,6 @@ import io.lucci.potlatch.server.web.model.SimplePaginator;
 import io.lucci.potlatch.server.web.model.User;
 
 import java.io.InputStream;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -24,12 +23,8 @@ public interface GiftManager {
 	public InputStream getGiftData(String uuid) throws GiftServiceException, GiftNotFoundExcetption, StorageServiceException;
 	
 	public Gift getGiftByUuid(String uuid) throws GiftServiceException, GiftNotFoundExcetption;
-	
-	public List<Gift> findAllGifts(User user) throws GiftServiceException;
 
-	public List<Gift> findAllChainedGifts(String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption, GiftNotChainExcetption;
-
-	public PaginatorResult<Gift> findAllGifts(User user, SimplePaginator paginator) throws GiftServiceException;
+	public PaginatorResult<Gift> loadGifts(User user, SimplePaginator paginator) throws GiftServiceException, StorageServiceException;
 	
-	public PaginatorResult<Gift> findAllChainedGifts(String parentUuid, User user, SimplePaginator paginator) throws GiftServiceException, GiftNotFoundExcetption, GiftNotChainExcetption;
+	public PaginatorResult<Gift> loadChain(String chainUuid, User user, SimplePaginator paginator) throws GiftServiceException, GiftNotFoundExcetption, GiftNotChainExcetption, StorageServiceException;
 }

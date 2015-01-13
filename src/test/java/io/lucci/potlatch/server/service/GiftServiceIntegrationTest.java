@@ -106,7 +106,7 @@ public class GiftServiceIntegrationTest extends AbstractTransactionalJUnit4Sprin
     public final void testFindAllGifts() throws Exception {
 		User user = UserBuilder.user().withId(1L).withBlockInappropriate(Boolean.TRUE).build();
 		
-		List<Gift> gifts = giftService.findAllGifts(user);
+		List<Gift> gifts = giftService.loadGifts(user, null).getResult();
 		logger.debug("Found gifts: {}", gifts);
 		
 		assertThat(gifts, hasSize(2));

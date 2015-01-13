@@ -3,7 +3,6 @@ package io.lucci.potlatch.server.service;
 import static org.junit.Assert.assertNotNull;
 import io.lucci.potlatch.server.config.PersistenceConfig;
 import io.lucci.potlatch.server.config.ServiceConfig;
-import io.lucci.potlatch.server.service.StorageService;
 import io.lucci.potlatch.server.service.StorageService.StorageAction;
 
 import java.io.File;
@@ -11,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -34,7 +34,7 @@ public class StorageServiceIntegrationTest extends AbstractTransactionalJUnit4Sp
 
     @Test
     public void testGeneratePresignedURL() throws Exception {
-    	URL url = storageService.prepareUrl(StorageAction.WRITE, "test-uuid");
+    	URI url = storageService.buildGiftUri(StorageAction.WRITE, "test-uuid");
     	logger.info("The presigned url is: {}", url);
     	assertNotNull(url);
     	uploadObject(url);
@@ -43,7 +43,7 @@ public class StorageServiceIntegrationTest extends AbstractTransactionalJUnit4Sp
     @Test
     public void testSaveObject() throws Exception {
     	FileInputStream in = new FileInputStream(new File(this.getClass().getResource("/images/lollipop.jpg").getFile()));
-    	storageService.storeObject(in, "obj"+System.currentTimeMillis());
+    	storageService.storeGiftData(in, "obj"+System.currentTimeMillis());
     }
     
     private void uploadObject(URL url) throws IOException {

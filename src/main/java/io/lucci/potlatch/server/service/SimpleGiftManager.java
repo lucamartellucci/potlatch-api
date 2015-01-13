@@ -1,5 +1,6 @@
 package io.lucci.potlatch.server.service;
 
+import io.lucci.potlatch.server.service.StorageService.StorageAction;
 import io.lucci.potlatch.server.service.exception.GiftNotChainExcetption;
 import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.service.exception.GiftServiceException;
@@ -10,7 +11,6 @@ import io.lucci.potlatch.server.web.model.SimplePaginator;
 import io.lucci.potlatch.server.web.model.User;
 
 import java.io.InputStream;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class SimpleGiftManager implements GiftManager {
 		}
 		
 		// write the data into the object storage
-   		storageService.storeObject(data, buildObjectName(uuid));
+   		storageService.storeGiftData(data, buildObjectName(uuid));
 		 
    		// updates the status of the gift
    		logger.debug("Update the status of the gift [{}] to: [{}]", GiftStatus.active, uuid);
@@ -64,7 +64,7 @@ public class SimpleGiftManager implements GiftManager {
 			throw new GiftServiceException(new StringBuffer("Unable to read the image. The current status of the gift [").append(gift.getUuid()).append("]").append(" is [").append(gift.getStatus()).append("]").toString() );
 		}
 		
-		return storageService.readObject(buildObjectName(uuid));
+		return storageService.loadGiftData(buildObjectName(uuid));
 	}
 
 	private String buildObjectName(String uuid) {
@@ -77,44 +77,43 @@ public class SimpleGiftManager implements GiftManager {
 	}
 
 	@Override
-	public PaginatorResult<Gift> findAllGifts(User user, SimplePaginator paginator) throws GiftServiceException {
-		return giftService.findAllGifts(user, paginator);
+	public PaginatorResult<Gift> loadGifts(User user, SimplePaginator paginator) throws GiftServiceException, StorageServiceException {
+		return injectGiftDataUri(giftService.loadGifts(user, paginator));
 	}
 	
 	@Override
-	public List<Gift> findAllGifts(User user) throws GiftServiceException {
-		return giftService.findAllGifts(user);
+	public Gift createGift(Gift gift, String chainUuid, User user) throws GiftServiceException, GiftNotFoundExcetption {
+		return giftService.createGift(gift, chainUuid, user);
 	}
 
 	@Override
-	public Gift createGift(Gift gift, String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption {
-		return giftService.createGift(gift, parentUuid, user);
+	public PaginatorResult<Gift> loadChain(String chainUuid, User user, SimplePaginator paginator) throws GiftServiceException,
+			GiftNotFoundExcetption, GiftNotChainExcetption, StorageServiceException {
+		return injectGiftDataUri(giftService.loadChain(checkChainUuid(chainUuid), user, paginator));
+	}
+	
+	
+
+	private PaginatorResult<Gift> injectGiftDataUri(PaginatorResult<Gift> gifts)
+			throws StorageServiceException {
+		for (Gift gift : gifts.getResult()) {
+			gift.setUri(storageService.buildGiftUri(StorageAction.READ, gift.getUuid()).toString());
+		}
+		return gifts;
 	}
 
-	@Override
-	public List<Gift> findAllChainedGifts(String parentUuid, User user) throws GiftServiceException, GiftNotFoundExcetption, GiftNotChainExcetption {
-		checkGiftChainUuid(parentUuid);
-		return giftService.findAllGifts(parentUuid, user);
-	}
-
-	@Override
-	public PaginatorResult<Gift> findAllChainedGifts(String parentUuid, User user, SimplePaginator paginator) throws GiftServiceException,
-			GiftNotFoundExcetption, GiftNotChainExcetption {
-		
-		checkGiftChainUuid(parentUuid);
-		return giftService.findAllGifts(parentUuid, user, paginator);
-	}
-
-	private void checkGiftChainUuid(String parentUuid)
+	private String checkChainUuid(String chainUuid)
 			throws GiftServiceException, GiftNotFoundExcetption,
 			GiftNotChainExcetption {
-		Gift parentGift = giftService.getGiftByUuid(parentUuid);
+		Gift parentGift = giftService.getGiftByUuid(chainUuid);
 		if (parentGift == null) {
-			throw new GiftNotFoundExcetption(new StringBuilder("Unable to find the Chain with id [").append(parentUuid).append("]").toString());
+			throw new GiftNotFoundExcetption(new StringBuilder("Unable to find the Chain with id [").append(chainUuid).append("]").toString());
 		}
 		if (!parentGift.getChainMaster()) {
-			throw new GiftNotChainExcetption(new StringBuilder("The Gift with id [").append(parentUuid).append("] is not a Chain").toString());
+			throw new GiftNotChainExcetption(new StringBuilder("The Gift with id [").append(chainUuid).append("] is not a Chain").toString());
 		}
+		
+		return chainUuid;
 	}
 	
 }

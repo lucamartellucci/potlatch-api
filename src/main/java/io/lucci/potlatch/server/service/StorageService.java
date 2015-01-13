@@ -1,7 +1,7 @@
 package io.lucci.potlatch.server.service;
 
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 
 public interface StorageService {
 	
@@ -9,10 +9,10 @@ public interface StorageService {
 		READ, WRITE
 	}
 	
-	public URL prepareUrl(StorageAction action, String objectName) throws StorageServiceException;	
+	public URI buildGiftUri(StorageAction action, String uuid) throws StorageServiceException;	
 	
-	public void storeObject(InputStream data, String objectName) throws StorageServiceException;
+	public void storeGiftData(InputStream data, String uuid) throws StorageServiceException;
 	
-	public InputStream readObject(String objectName) throws StorageServiceException;
+	public InputStream loadGiftData(String uuid) throws StorageServiceException;
 
 }

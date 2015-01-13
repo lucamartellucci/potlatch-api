@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.LockModeType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriTemplate;
@@ -70,7 +67,7 @@ public class SimpleGiftService implements GiftService {
 	}
 
 	@Override
-	public PaginatorResult<Gift> findAllGifts(User user, SimplePaginator paginator) throws GiftServiceException {
+	public PaginatorResult<Gift> loadGifts(User user, SimplePaginator paginator) throws GiftServiceException {
 		try {
 			Pageable p = new PageRequest(paginator.getPage(), paginator.getSize());
 			
@@ -99,8 +96,7 @@ public class SimpleGiftService implements GiftService {
 		}
 	}
 	
-	@Override
-	public List<Gift> findAllGifts(User user) throws GiftServiceException {
+	private List<Gift> findAllGifts(User user) throws GiftServiceException {
 		try {
 			logger.info("Loading gifts for user [{}]", user.getId());
 			logger.info("Block inappropriate [{}]", user.getBlockInappropriate());
@@ -215,14 +211,13 @@ public class SimpleGiftService implements GiftService {
 		}
 	}
 	
-	@Override
-	public List<Gift> findAllGifts(String parentUuid, User user) throws GiftServiceException {
+	private List<Gift> findAllGifts(String parentUuid, User user) throws GiftServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PaginatorResult<Gift> findAllGifts(String parentUuid, User user, SimplePaginator paginator) throws GiftServiceException {
+	public PaginatorResult<Gift> loadChain(String parentUuid, User user, SimplePaginator paginator) throws GiftServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
