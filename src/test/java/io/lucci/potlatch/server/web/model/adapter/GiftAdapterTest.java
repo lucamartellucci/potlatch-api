@@ -25,14 +25,13 @@ public class GiftAdapterTest {
 		giftDBTO.setStatus("Active");
 		giftDBTO.setTitle("Gift_1");
 		giftDBTO.setDescription("Gift_1 description");
-		giftDBTO.setUri("http://myuri.it");
-		giftDBTO.setUuid("uuid");
+		giftDBTO.setUuid("filename");
 		
 		Gift gift = adapter.dbtoToTo(giftDBTO , false);
 		assertThat(gift, is(notNullValue()));
 		
-		assertThat(gift.getUuid(),is(equalTo(giftDBTO.getUuid())));
-		assertThat(gift.getUri() ,is(equalTo(giftDBTO.getUri())));
+		assertThat(gift.getId(),is(equalTo(giftDBTO.getId())));
+		assertThat(gift.getImageFilename() ,is(equalTo(adapter.buildImageFilename(giftDBTO.getUuid()))));
 		assertThat(gift.getLikedByMe() ,is(equalTo(true)));
 		assertThat(gift.getNumberOfLikes() ,is(equalTo(giftDBTO.getNumberOfLikes())));
 		assertThat(gift.getReportedByMe(), is(nullValue()));

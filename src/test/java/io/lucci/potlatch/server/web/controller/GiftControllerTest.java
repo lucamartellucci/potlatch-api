@@ -69,13 +69,13 @@ public class GiftControllerTest {
     	
 		Gift gift = buildGift(user);
 	
-		when(giftManager.getGiftByUuid("1")).thenReturn(gift);
+		when(giftManager.getGiftById(1L)).thenReturn(gift);
     	
         this.mockMvc.perform( get( "/api/v1/gift/1" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
 	        .andExpect( status().isOk() )
 	        .andExpect( content().contentType( "application/json;charset=UTF-8" ) )
 	        .andDo( print() )
-	        .andExpect( jsonPath( "$.uuid" ).value( gift.getUuid() ) )
+	        .andExpect( jsonPath( "$.id" ).value( gift.getId().intValue() ) )
 	        .andExpect( jsonPath( "$.title" ).value( gift.getTitle() ) )
 	        .andExpect( jsonPath( "$.description" ).value( gift.getDescription() ) )
 	        .andExpect( jsonPath( "$.timestamp" ).value( gift.getTimestamp().getTime() ) )
@@ -85,7 +85,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.reportedByMe" ).value( gift.getReportedByMe() ) )
 	        .andExpect( jsonPath( "$.likedByMe" ).value( gift.getLikedByMe() ));
 	        
-        verify(giftManager).getGiftByUuid("1");
+        verify(giftManager).getGiftById(1L);
     }
     
     
@@ -101,7 +101,7 @@ public class GiftControllerTest {
 		paginatorModel.setPageSize(5);
 		paginatorModel.setTotalPages(1);
 		
-		when(giftManager.loadGifts(user, paginator)).thenReturn(paginatorModel);
+		when(giftManager.getGifts(user, paginator)).thenReturn(paginatorModel);
     	
         this.mockMvc.perform( get( "/api/v1/gift?page=0&size=5" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
 	        .andExpect( status().isOk() )
@@ -111,7 +111,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.pageSize" ).value(5) )
 	        .andExpect( jsonPath( "$.totalPages" ).value(1) )
 	        .andExpect( jsonPath( "$.result", hasSize(1)) )
-	        .andExpect( jsonPath( "$.result[0].uuid" ).value( gift.getUuid() ) )
+	        .andExpect( jsonPath( "$.result[0].id" ).value( gift.getId().intValue() ) )
 	        .andExpect( jsonPath( "$.result[0].title" ).value( gift.getTitle() ) )
 	        .andExpect( jsonPath( "$.result[0].description" ).value( gift.getDescription() ) )
 	        .andExpect( jsonPath( "$.result[0].timestamp" ).value( gift.getTimestamp().getTime() ) )
@@ -121,14 +121,14 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.result[0].reportedByMe" ).value( gift.getReportedByMe() ) )
 	        .andExpect( jsonPath( "$.result[0].likedByMe" ).value( gift.getLikedByMe() ));
 	        
-        verify(giftManager).loadGifts(user, paginator);
+        verify(giftManager).getGifts(user, paginator);
     }
     
     @Test
     public void testFindByIdNotExistingGift() throws Exception {
     	
 		final String errorMessage = "Unable to find the gift with id [2]";
-		when(giftManager.getGiftByUuid("2")).thenThrow(new GiftNotFoundExcetption(errorMessage));
+		when(giftManager.getGiftById(2L)).thenThrow(new GiftNotFoundExcetption(errorMessage));
     	
         this.mockMvc.perform( get( "/api/v1/gift/2" ).accept( MediaType.parseMediaType( "application/json;charset=UTF-8" ) ) )
 	        .andExpect( status().isNotFound() )
@@ -137,7 +137,7 @@ public class GiftControllerTest {
 	        .andExpect( jsonPath( "$.code" ).value( ErrorCode.RESOURCE_NOT_FOUND ) )
 	        .andExpect( jsonPath( "$.message" ).value( errorMessage ) );
         
-        verify(giftManager).getGiftByUuid("2");
+        verify(giftManager).getGiftById(2L);
     }
     
     @Test
@@ -151,8 +151,8 @@ public class GiftControllerTest {
 				.withChainMaster(Boolean.TRUE)
 				.withStatus(Gift.GiftStatus.ready_for_upload.toString())
 				.withTimestamp(new Date())
-				.withUri("http://localhost/potlatch:8080/api/v1/gift/f6aa4067-5b21-4d98-b172-307b557187f0/data")
-				.withUuid("f6aa4067-5b21-4d98-b172-307b557187f0")
+				.withImageUrl("http://localhost/potlatch:8080/api/v1/gift/f6aa4067-5b21-4d98-b172-307b557187f0/data")
+				.withId(1L)
 				.build();
 
 		when(giftManager.createGift(gift, null, user)).thenReturn(savedGift);
@@ -163,7 +163,7 @@ public class GiftControllerTest {
         	.andDo( print() )
 	        .andExpect( status().isOk() )
 	        .andExpect( content().contentType( "application/json;charset=UTF-8" ) )
-	        .andExpect( jsonPath( "$.uuid" ).value( savedGift.getUuid() ) )
+	        .andExpect( jsonPath( "$.id" ).value( savedGift.getId().intValue() ) )
 	        .andExpect( jsonPath( "$.title" ).value( savedGift.getTitle() ) )
 	        .andExpect( jsonPath( "$.description" ).value( savedGift.getDescription() ) )
 	        .andExpect( jsonPath( "$.timestamp" ).value( savedGift.getTimestamp().getTime() ) )
@@ -179,7 +179,7 @@ public class GiftControllerTest {
 
 	private Gift buildGift(User user) {
 		Gift gift = GiftBuilder.gift()
-    			.withUuid("f6aa4067-5b21-4d98-b172-307b557187f0")
+    			.withId(1L)
     			.withChainMaster(Boolean.TRUE)
     			.withDescription("Gift desc 1")
     			.withLikedByMe(Boolean.TRUE)
@@ -188,7 +188,7 @@ public class GiftControllerTest {
     			.withStatus("Active")
     			.withTimestamp(new Date())
     			.withTitle("Gift 1")
-    			.withUri("http://localhost/potlatch:8080/api/v1/gift/f6aa4067-5b21-4d98-b172-307b557187f0")
+    			.withImageUrl("http://localhost/potlatch:8080/api/v1/gift/f6aa4067-5b21-4d98-b172-307b557187f0")
     			.withUser(user)
     			.build();
 		return gift;

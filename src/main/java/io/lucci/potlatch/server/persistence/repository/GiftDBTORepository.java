@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRED)
 public interface GiftDBTORepository extends JpaRepository<GiftDBTO, Long>, JpaSpecificationExecutor<GiftDBTO> {
 
-	public GiftDBTO findByUuid(String uuid);
-	
 	@Query(name = "Gift.findAllByUserId")
     List<GiftDBTO> findAllByUserId(Long userId);
 

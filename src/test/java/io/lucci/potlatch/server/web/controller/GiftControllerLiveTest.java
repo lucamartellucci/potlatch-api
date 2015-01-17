@@ -58,14 +58,14 @@ public class GiftControllerLiveTest {
 		logger.debug("Retrieved gift is {}", gift);
 		
 		assertThat(gift,is(notNullValue()));
-		assertThat(gift.getUuid(), is(equalTo("f6aa4067-5b21-4d98-b172-307b557187f0")));
+		assertThat(gift.getId(), is(equalTo(1L)));
 		assertThat(gift.getDescription(), is(equalTo("description_1")));
 		assertThat(gift.getNumberOfLikes(), is(equalTo(2L)));
 		assertThat(gift.getStatus(), is(equalTo("active")));
 		assertThat(df.format(gift.getTimestamp()), is(equalTo("2014-11-12 09:42:47")));
 		assertThat(gift.getChainMaster(), is(equalTo(Boolean.TRUE)));
 		assertThat(gift.getTitle(), is(equalTo("title_1")));
-		assertThat(gift.getUri(), is(equalTo("http://www.url1.it")));
+		assertThat(gift.getImageUrl(), is(equalTo("http://www.url1.it")));
 	}
 	
 	@Test
@@ -85,9 +85,9 @@ public class GiftControllerLiveTest {
 		List<Gift> gifts = securedGiftApi.getGifts();
 		assertThat(gifts.size(), is(equalTo(2)));
 		for (Gift gift : gifts) {
-			assertThat(gift.getUuid(), is(anyOf(
-					equalTo("f6aa4067-5b21-4d98-b172-307b557187f0"), 
-					equalTo("5a4dcd02-1e6d-4c4d-a3a0-2e28cb631d21")
+			assertThat(gift.getId(), is(anyOf(
+					equalTo(1L), 
+					equalTo(2L)
 				)));
 		}
 	}
@@ -136,15 +136,15 @@ public class GiftControllerLiveTest {
 		Gift newGift = securedGiftApi.createGift(gift);
 		
 		assertThat(newGift, is(notNullValue()));
-		assertThat(newGift.getUuid(), is(notNullValue()));
+		assertThat(newGift.getId(), is(notNullValue()));
 		assertThat(newGift.getTitle(), is(equalTo("I love the sun")));
 		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
 		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
-		assertThat(newGift.getUri(), is(notNullValue()));
-		assertThat(newGift.getUri(), is(equalTo(new StringBuilder(TEST_URL)
+		assertThat(newGift.getImageUrl(), is(notNullValue()));
+		assertThat(newGift.getImageUrl(), is(equalTo(new StringBuilder(TEST_URL)
 			.append(GiftApi.PATH_GIFT)
 			.append("/")
-			.append(newGift.getUuid())
+			.append(newGift.getId())
 			.append("/data").toString())));
 		assertTrue(newGift.getChainMaster().booleanValue());
 		
@@ -157,15 +157,15 @@ public class GiftControllerLiveTest {
 		Gift newGift = securedGiftApi.createChainedGift(gift, "f6aa4067-5b21-4d98-b172-307b557187f0");
 		
 		assertThat(newGift, is(notNullValue()));
-		assertThat(newGift.getUuid(), is(notNullValue()));
+		assertThat(newGift.getId(), is(notNullValue()));
 		assertThat(newGift.getTitle(), is(equalTo("I love the sun")));
 		assertThat(newGift.getDescription(), is(equalTo("A really sunny day!")));
 		assertThat(newGift.getStatus(), is(equalTo(Gift.GiftStatus.ready_for_upload.toString())));
-		assertThat(newGift.getUri(), is(notNullValue()));
-		assertThat(newGift.getUri(), is(equalTo(new StringBuilder(TEST_URL)
+		assertThat(newGift.getImageUrl(), is(notNullValue()));
+		assertThat(newGift.getImageUrl(), is(equalTo(new StringBuilder(TEST_URL)
 			.append(GiftApi.PATH_GIFT)
 			.append("/")
-			.append(newGift.getUuid())
+			.append(newGift.getId())
 			.append("/data").toString())));
 		assertFalse(newGift.getChainMaster().booleanValue());
 	}

@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -34,7 +33,7 @@ public class StorageServiceIntegrationTest extends AbstractTransactionalJUnit4Sp
 
     @Test
     public void testGeneratePresignedURL() throws Exception {
-    	URI url = storageService.buildGiftUri(StorageAction.WRITE, "test-uuid");
+    	URL url = storageService.buildGiftUrl(StorageAction.WRITE, "test-uuid");
     	logger.info("The presigned url is: {}", url);
     	assertNotNull(url);
     	uploadObject(url);

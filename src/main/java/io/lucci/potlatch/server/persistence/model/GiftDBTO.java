@@ -27,12 +27,12 @@ import javax.persistence.Transient;
 	{
 		@NamedNativeQuery(
 			name="Gift.findAllByUserId",
-			query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null order by g.timestamp desc", 
+			query="select g.id, g.title, g.description, g.timestamp, g.parent_id, g.uuid, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null order by g.timestamp desc", 
 			resultSetMapping="giftExtended"
 		),
 		@NamedNativeQuery(
 				name="Gift.findAllByUserIdFilterInappropriate",
-				query="select g.id, g.uuid, g.title, g.description, g.timestamp, g.parent_id, g.uri, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
+				query="select g.id, g.title, g.description, g.timestamp, g.parent_id, g.uuid, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
 				resultSetMapping="giftExtended"
 		),
 		@NamedNativeQuery(
@@ -53,12 +53,11 @@ import javax.persistence.Transient;
 					targetClass=GiftDBTO.class, 
 					columns= {
 						 @ColumnResult(name="id", type=java.lang.Long.class),
-						 @ColumnResult(name="uuid", type=java.lang.String.class),
 						 @ColumnResult(name="title", type=java.lang.String.class),
 						 @ColumnResult(name="description", type=java.lang.String.class),
 						 @ColumnResult(name="timestamp", type=java.util.Date.class),
 						 @ColumnResult(name="parent_id", type=java.lang.Long.class),
-						 @ColumnResult(name="uri", type=java.lang.String.class),
+						 @ColumnResult(name="uuid", type=java.lang.String.class),
 						 @ColumnResult(name="status", type=java.lang.String.class),
 						 @ColumnResult(name="number_of_likes", type=java.lang.Long.class),
 						 @ColumnResult(name="i_like_it", type=java.lang.Boolean.class),
@@ -84,9 +83,6 @@ public class GiftDBTO {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique=true)
-	private String uuid;
-	
 	private String title;
 	
 	private String description;
@@ -96,7 +92,7 @@ public class GiftDBTO {
 	@Column(name="parent_id")
 	private Long parentId;
 	
-	private String uri;
+	private String uuid;
 	
 	private String status;
 	
@@ -121,18 +117,17 @@ public class GiftDBTO {
 		
 	}
 	
-	public GiftDBTO(Long id, String uuid, String title, String description,
-			Date timestamp, Long parentId, String uri, String status,
+	public GiftDBTO(Long id, String title, String description,
+			Date timestamp, Long parentId, String uuid, String status,
 			Long numberOfLikes, Boolean liked, Boolean reported, Long userId, String username, String email) {
 		
 		super();
 		this.id = id;
-		this.uuid = uuid;
 		this.title = title;
 		this.description = description;
 		this.timestamp = timestamp;
 		this.parentId = parentId;
-		this.uri = uri;
+		this.uuid = uuid;
 		this.status = status;
 		this.numberOfLikes = numberOfLikes;
 		this.liked = liked;
@@ -145,12 +140,6 @@ public class GiftDBTO {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getUuid() {
-		return uuid;
-	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
 	}
 	public String getTitle() {
 		return title;
@@ -176,11 +165,11 @@ public class GiftDBTO {
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
-	public String getUri() {
-		return uri;
+	public String getUuid() {
+		return uuid;
 	}
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	public String getStatus() {
 		return status;
@@ -223,8 +212,6 @@ public class GiftDBTO {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Gift [id=");
 		builder.append(id);
-		builder.append(", uuid=");
-		builder.append(uuid);
 		builder.append(", title=");
 		builder.append(title);
 		builder.append(", description=");
@@ -233,8 +220,8 @@ public class GiftDBTO {
 		builder.append(timestamp);
 		builder.append(", parentId=");
 		builder.append(parentId);
-		builder.append(", uri=");
-		builder.append(uri);
+		builder.append(", uuid=");
+		builder.append(uuid);
 		builder.append(", status=");
 		builder.append(status);
 		builder.append(", numberOfLikes=");

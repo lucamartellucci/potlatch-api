@@ -9,24 +9,24 @@ public class Gift implements Serializable {
 	
 	public enum GiftStatus {active,ready_for_upload,upload_failed}
 	
-	private String uuid;
-	
+	private Long id;
 	private String title;
 	private String description;
 	private Date timestamp;
 	private Boolean chainMaster;
-	private String uri;
+	private String imageUrl;
+	private String imageFilename;
 	private String status;
 	private Long numberOfLikes;
 	private User user;
 	private Boolean likedByMe;
 	private Boolean reportedByMe;
 	
-	public String getUuid() {
-		return uuid;
+	public Long getId() {
+		return id;
 	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getTitle() {
 		return title;
@@ -51,12 +51,6 @@ public class Gift implements Serializable {
 	}
 	public void setChainMaster(Boolean chainMaster) {
 		this.chainMaster = chainMaster;
-	}
-	public String getUri() {
-		return uri;
-	}
-	public void setUri(String uri) {
-		this.uri = uri;
 	}
 	public String getStatus() {
 		return status;
@@ -88,33 +82,17 @@ public class Gift implements Serializable {
 	public void setReportedByMe(Boolean reportedByMe) {
 		this.reportedByMe = reportedByMe;
 	}
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Gift [uuid=");
-		builder.append(uuid);
-		builder.append(", title=");
-		builder.append(title);
-		builder.append(", description=");
-		builder.append(description);
-		builder.append(", timestamp=");
-		builder.append(timestamp);
-		builder.append(", chainMaster=");
-		builder.append(chainMaster);
-		builder.append(", uri=");
-		builder.append(uri);
-		builder.append(", status=");
-		builder.append(status);
-		builder.append(", numberOfLikes=");
-		builder.append(numberOfLikes);
-		builder.append(", user=");
-		builder.append(user);
-		builder.append(", likedByMe=");
-		builder.append(likedByMe);
-		builder.append(", reportedByMe=");
-		builder.append(reportedByMe);
-		builder.append("]");
-		return builder.toString();
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public String getImageFilename() {
+		return imageFilename;
+	}
+	public void setImageFilename(String imageFilename) {
+		this.imageFilename = imageFilename;
 	}
 	@Override
 	public int hashCode() {
@@ -124,6 +102,11 @@ public class Gift implements Serializable {
 				+ ((chainMaster == null) ? 0 : chainMaster.hashCode());
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((imageFilename == null) ? 0 : imageFilename.hashCode());
+		result = prime * result
+				+ ((imageUrl == null) ? 0 : imageUrl.hashCode());
 		result = prime * result
 				+ ((likedByMe == null) ? 0 : likedByMe.hashCode());
 		result = prime * result
@@ -134,9 +117,7 @@ public class Gift implements Serializable {
 		result = prime * result
 				+ ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 	@Override
@@ -157,6 +138,21 @@ public class Gift implements Serializable {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (imageFilename == null) {
+			if (other.imageFilename != null)
+				return false;
+		} else if (!imageFilename.equals(other.imageFilename))
+			return false;
+		if (imageUrl == null) {
+			if (other.imageUrl != null)
+				return false;
+		} else if (!imageUrl.equals(other.imageUrl))
 			return false;
 		if (likedByMe == null) {
 			if (other.likedByMe != null)
@@ -188,24 +184,42 @@ public class Gift implements Serializable {
 				return false;
 		} else if (!title.equals(other.title))
 			return false;
-		if (uri == null) {
-			if (other.uri != null)
-				return false;
-		} else if (!uri.equals(other.uri))
-			return false;
 		if (user == null) {
 			if (other.user != null)
 				return false;
 		} else if (!user.equals(other.user))
 			return false;
-		if (uuid == null) {
-			if (other.uuid != null)
-				return false;
-		} else if (!uuid.equals(other.uuid))
-			return false;
 		return true;
 	}
-	
-	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Gift [id=");
+		builder.append(id);
+		builder.append(", title=");
+		builder.append(title);
+		builder.append(", description=");
+		builder.append(description);
+		builder.append(", timestamp=");
+		builder.append(timestamp);
+		builder.append(", chainMaster=");
+		builder.append(chainMaster);
+		builder.append(", imageUrl=");
+		builder.append(imageUrl);
+		builder.append(", imageFilename=");
+		builder.append(imageFilename);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", numberOfLikes=");
+		builder.append(numberOfLikes);
+		builder.append(", user=");
+		builder.append(user);
+		builder.append(", likedByMe=");
+		builder.append(likedByMe);
+		builder.append(", reportedByMe=");
+		builder.append(reportedByMe);
+		builder.append("]");
+		return builder.toString();
+	}
 	
 }

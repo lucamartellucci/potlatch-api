@@ -3,7 +3,7 @@ package io.lucci.potlatch.server.web.controller;
 import io.lucci.potlatch.server.service.GiftManager;
 import io.lucci.potlatch.server.service.StorageServiceException;
 import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
-import io.lucci.potlatch.server.service.exception.GiftServiceException;
+import io.lucci.potlatch.server.service.exception.GiftManagerException;
 import io.lucci.potlatch.server.web.controller.exception.InternalServerErrorException;
 import io.lucci.potlatch.server.web.controller.exception.ResourceNotFoundException;
 import io.lucci.potlatch.server.web.controller.resolver.CurrentUser;
@@ -44,15 +44,15 @@ public class GiftController {
 	
 
     @RequestMapping(value = "/gift/{id}", method = RequestMethod.GET)
-    public @ResponseBody Gift findById(@PathVariable("id") final String id) throws ResourceNotFoundException, InternalServerErrorException {
+    public @ResponseBody Gift findById(@PathVariable("id") final Long id) throws ResourceNotFoundException, InternalServerErrorException {
     	try { 	
 
     		logger.info("Searching gift with id [{}]", id);
-			Gift gift = giftManager.getGiftByUuid(id);
+			Gift gift = giftManager.getGiftById(id);
 			logger.info("Found gift {}", gift);
 			return gift;
 			
-		} catch (GiftServiceException e) {
+		} catch (GiftManagerException e) {
 			final String msg = new StringBuilder("Unable to find the gift with id [").append(id).append("]").toString();
 			logger.error(msg, e);
 			throw new InternalServerErrorException(msg, e);
@@ -68,7 +68,7 @@ public class GiftController {
     		PaginatorResult<Gift> paginatorResult = null;
     		
 			logger.info("Retrieve gifts for user [{}], paginator [{}]", paginator);
-			paginatorResult = giftManager.loadGifts(user, paginator);
+			paginatorResult = giftManager.getGifts(user, paginator);
     		
     		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
     		return paginatorResult;
@@ -82,11 +82,11 @@ public class GiftController {
     @RequestMapping(value = "/gift", method = RequestMethod.POST)
     public @ResponseBody Gift createGift(
     		@RequestBody Gift gift, 
-    		@RequestParam( value="parentUuid", required = false) String parentUuid, 
+    		@RequestParam( value="chainId", required = false) Long chainId, 
     		@CurrentUser User user) throws InternalServerErrorException 
     {
     	try {
-    		Gift createdGift = giftManager.createGift(gift, parentUuid, user);
+    		Gift createdGift = giftManager.createGift(gift, chainId, user);
     		return createdGift;
 		} catch (Exception e) {
 			logger.error("Unable to create the gift", e);
@@ -97,7 +97,7 @@ public class GiftController {
     
     @RequestMapping(value = "/gift/{id}/data", method = RequestMethod.POST)
     public @ResponseBody Gift setGiftData(
-    		@PathVariable("id") final String id, @RequestParam("file") final MultipartFile multiPart, @CurrentUser User user) 
+    		@PathVariable("id") final Long id, @RequestParam("file") final MultipartFile multiPart, @CurrentUser User user) 
     				throws InternalServerErrorException, ResourceNotFoundException 
     {
     	logger.info("Storing data for gift [{}]", id);
@@ -105,7 +105,7 @@ public class GiftController {
     	try {
 				gift = giftManager.setGiftData(id, multiPart.getInputStream());
 			
-    	} catch (IOException | GiftServiceException | StorageServiceException e) {
+    	} catch (IOException | GiftManagerException | StorageServiceException e) {
     		final String msg = new StringBuilder("Unable to set data for the gift [").append(id).append("]").toString();
     		logger.error(msg);
 			throw new InternalServerErrorException(msg, e);
@@ -118,14 +118,14 @@ public class GiftController {
     }
     
     @RequestMapping(value = "/gift/{id}/data", method = RequestMethod.GET)
-    public void getGiftData(@PathVariable("id") final String id, HttpServletResponse response) throws InternalServerErrorException, ResourceNotFoundException {
+    public void getGiftData(@PathVariable("id") final Long id, HttpServletResponse response) throws InternalServerErrorException, ResourceNotFoundException {
     	logger.info("Retrieve data for gift [{}]", id);
     	
     	try (InputStream giftData = giftManager.getGiftData(id);) {
     		
 			IOUtils.copy(giftData, response.getOutputStream());
 			
-		} catch (StorageServiceException | GiftServiceException | IOException e) {
+		} catch (StorageServiceException | GiftManagerException | IOException e) {
 			final String msg = new StringBuilder("Unable to get data for the gift [").append(id).append("]").toString();
     		logger.error(msg);
 			throw new InternalServerErrorException(msg, e);		
@@ -138,14 +138,14 @@ public class GiftController {
     
     
     @RequestMapping(value = "/gift/{id}/chain", method = RequestMethod.GET)
-    public @ResponseBody PaginatorResult<Gift> retrieveGiftChain(@CurrentUser User user, @Paginator SimplePaginator paginator, @PathVariable String id) 
+    public @ResponseBody PaginatorResult<Gift> retrieveGiftChain(@CurrentUser User user, @Paginator SimplePaginator paginator, @PathVariable Long id) 
     		throws InternalServerErrorException {
     	try {
     		PaginatorResult<Gift> paginatorResult = null;
     		
     		logger.info("Retrieve gifts for user [{}]", user.getUsername());
     		logger.info("Retrieve gifts for user [{}], chain id [{}], paginator [{}]", Arrays.asList(user.getUsername(),id, paginator));
-			paginatorResult = giftManager.loadChain(id, user, paginator);
+			paginatorResult = giftManager.getGiftChain(id, user, paginator);
     		
     		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
     		return paginatorResult;

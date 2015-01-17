@@ -1,7 +1,6 @@
 package io.lucci.potlatch.server.service;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ public class S3StorageService implements StorageService {
 	
 	
 	@Override
-	public URI buildGiftUri(StorageAction action, String uuid) throws StorageServiceException {
+	public URL buildGiftUrl(StorageAction action, String uuid) throws StorageServiceException {
 		
 		AmazonS3 s3client = new AmazonS3Client(new BasicAWSCredentials(accessKeyId, secretAccessKey));
 		
@@ -55,7 +54,7 @@ public class S3StorageService implements StorageService {
 			generatePresignedUrlRequest.setExpiration(expiration);
 
 			URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest); 
-			return url.toURI();
+			return url;
 			
 		} catch (Exception e) {
 			throw new StorageServiceException(new StringBuilder("Unable to generate a presigne URL for object [").append(uuid).append("]").toString(), e);

@@ -35,8 +35,8 @@ class GiftBuilderBase<GeneratorT extends GiftBuilderBase<GeneratorT>> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public GeneratorT withUuid(String aValue) {
-		instance.setUuid(aValue);
+	public GeneratorT withId(Long aValue) {
+		instance.setId(aValue);
 
 		return (GeneratorT) this;
 	}
@@ -70,8 +70,15 @@ class GiftBuilderBase<GeneratorT extends GiftBuilderBase<GeneratorT>> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public GeneratorT withUri(String aValue) {
-		instance.setUri(aValue);
+	public GeneratorT withImageUrl(String aValue) {
+		instance.setImageUrl(aValue);
+
+		return (GeneratorT) this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public GeneratorT withImageFilename(String aValue) {
+		instance.setImageFilename(aValue);
 
 		return (GeneratorT) this;
 	}

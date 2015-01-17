@@ -33,12 +33,11 @@ DROP TABLE IF EXISTS `potlatch`.`gift` ;
 
 CREATE TABLE IF NOT EXISTS `potlatch`.`gift` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `uuid` VARCHAR(45) NULL,
   `title` VARCHAR(45) NULL,
   `description` VARCHAR(300) NULL,
   `timestamp` TIMESTAMP NULL,
   `parent_id` BIGINT NULL,
-  `uri` VARCHAR(300) NULL,
+  `uuid` VARCHAR(300) NULL,
   `user_id` BIGINT NOT NULL,
   `status` VARCHAR(45) NOT NULL,
   `number_of_likes` BIGINT NULL,  
