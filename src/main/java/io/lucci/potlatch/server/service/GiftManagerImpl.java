@@ -255,7 +255,7 @@ public class GiftManagerImpl implements GiftManager {
 		
 		logger.info("Loading page [], with size []", p.getPageNumber(), p.getPageSize());
 		if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
-			page = giftRepository.findAllByUserIdFilterInappropriate(user.getId(),p);
+			page = giftRepository.findAllByUserIdRemoveInappropriate(user.getId(), p);
 		} else {
 			page = giftRepository.findAllByUserId(user.getId(), p);
 		}
@@ -281,7 +281,7 @@ public class GiftManagerImpl implements GiftManager {
 		List<Gift> result = new ArrayList<>();
 		List<GiftDBTO> giftDBTOs = null;
 		if (user.getBlockInappropriate()!= null && user.getBlockInappropriate().booleanValue()) {
-			giftDBTOs = giftRepository.findAllByUserIdFilterInappropriate(user.getId());
+			giftDBTOs = giftRepository.findAllByUserIdRemoveInappropriate(user.getId());
 		} else {
 			giftDBTOs = giftRepository.findAllByUserId(user.getId());
 		}

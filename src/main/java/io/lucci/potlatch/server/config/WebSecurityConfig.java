@@ -77,6 +77,7 @@ public class WebSecurityConfig {
 			public OAuth2Config() throws Exception {
 				
 				csvc = new InMemoryClientDetailsServiceBuilder()
+				//TODO: missing authorizedGrantTypes = password	
 					.withClient("mobile")
 						.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
 						.scopes("read","write").resourceIds("gift", "oauth2-resource")

@@ -76,12 +76,38 @@ public class GiftDBTORepositoryIntegrationTest extends AbstractTransactionalJUni
 		assertThat(gift1.getUser().getEmail(), is("luca.martellucci@gmail.com"));
 	}
 	
+	
 	@Test
-	public final void testFindAllByUserIdFilterInappropriate() throws Exception {
+	public final void testFindAllByUserIdAndTitle() throws Exception {
 
 		executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
 		final long userId = 1L;
-		List<GiftDBTO> gifts = repo.findAllByUserIdFilterInappropriate(userId);
+		List<GiftDBTO> gifts = repo.findAllByUserIdAndTitle(userId,"title");
+		assertThat(gifts.size(), is(equalTo(3)));
+
+		for (GiftDBTO gift : gifts) {
+			logger.info("Gift is: {}", gift);
+		}
+		
+		GiftDBTO gift1 = gifts.get(0);
+		assertThat(gift1.getId(), is(equalTo(1L)));
+		assertThat(gift1.getLiked(), is(equalTo(Boolean.TRUE)));
+		assertThat(gift1.getTitle(), is("title_1"));
+		assertThat(gift1.getDescription(), is("description_1"));
+		assertThat(gift1.getUuid(), is("f6aa4067-5b21-4d98-b172-307b557187f0"));
+		assertThat(gift1.getStatus(), is("active"));
+		assertThat(gift1.getUser(), is(notNullValue()));
+		assertThat(gift1.getUser().getId(), is(1L));
+		assertThat(gift1.getUser().getUsername(), is("luca"));
+		assertThat(gift1.getUser().getEmail(), is("luca.martellucci@gmail.com"));
+	}
+	
+	@Test
+	public final void testFindAllByUserIdRemoveInappropriate() throws Exception {
+
+		executeSqlScript("file:src/test/resources/db/gift.prepareDB.sql", false);
+		final long userId = 1L;
+		List<GiftDBTO> gifts = repo.findAllByUserIdRemoveInappropriate(userId);
 		assertThat(gifts.size(), is(equalTo(2)));
 
 		for (GiftDBTO gift : gifts) {

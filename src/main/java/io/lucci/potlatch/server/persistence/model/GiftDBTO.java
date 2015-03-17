@@ -31,19 +31,24 @@ import javax.persistence.Transient;
 			resultSetMapping="giftExtended"
 		),
 		@NamedNativeQuery(
-				name="Gift.findAllByUserIdFilterInappropriate",
-				query="select g.id, g.title, g.description, g.timestamp, g.parent_id, g.uuid, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
-				resultSetMapping="giftExtended"
-		),
-		@NamedNativeQuery(
-				name="Gift.countElements",
+				name="Gift.countByUserId",
 				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null",
 				resultSetMapping="giftCount"
 		),
 		@NamedNativeQuery(
-				name="Gift.countElementsFilterInappropriate",
+				name="Gift.findAllByUserIdAndInappropriate",
+				query="select g.id, g.title, g.description, g.timestamp, g.parent_id, g.uuid, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
+				resultSetMapping="giftExtended"
+		),
+		@NamedNativeQuery(
+				name="Gift.countByUserIdAndInappropriate",
 				query="select count(g.id) as num from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 where g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1)",
 				resultSetMapping="giftCount"
+		),
+		@NamedNativeQuery(
+				name="Gift.findAllByUserIdAndTitle",
+				query="select g.id, g.title, g.description, g.timestamp, g.parent_id, g.uuid, g.status, g.number_of_likes, g.user_id, ua.i_like_it, ua.inappropriate, u.username, u.email from gift g left join user_action ua on ua.gift_id = g.id and ua.user_id = ?1 join user u on g.user_id = u.id where g.title like '%?2%' and g.parent_id is null and (ua.inappropriate is null or ua.inappropriate <> 1) order by g.timestamp desc", 
+				resultSetMapping="giftExtended"
 		)
 	}
 )

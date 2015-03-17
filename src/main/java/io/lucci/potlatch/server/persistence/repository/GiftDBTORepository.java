@@ -17,14 +17,26 @@ public interface GiftDBTORepository extends JpaRepository<GiftDBTO, Long>, JpaSp
 
 	@Query(name = "Gift.findAllByUserId")
     List<GiftDBTO> findAllByUserId(Long userId);
-
-    @Query(name = "Gift.findAllByUserId", countName = "Gift.countElements")
+	
+	@Query(name = "Gift.findAllByUserId", countName = "Gift.countByUserId")
 	Page<GiftDBTO> findAllByUserId(Long userId, Pageable pageable);
-    
-	@Query(name = "Gift.findAllByUserIdFilterInappropriate")
-    List<GiftDBTO> findAllByUserIdFilterInappropriate(Long userId);
 
-    @Query(name = "Gift.findAllByUserIdFilterInappropriate", countName = "Gift.countElementsFilterInappropriate")
-	Page<GiftDBTO> findAllByUserIdFilterInappropriate(Long userId, Pageable pageable);
+	@Query(name = "Gift.findAllByUserIdAndTitle")
+	List<GiftDBTO> findAllByUserIdAndTitle(Long userId, String title);
+    
+    @Query(name = "Gift.findAllByUserIdAndTitle", countName = "Gift.countByUserIdAndTitle")
+    List<GiftDBTO> findAllByUserIdAndTitle(Long userId, String title, Pageable pageable);
+    
+	@Query(name = "Gift.findAllByUserIdAndInappropriate")
+    List<GiftDBTO> findAllByUserIdRemoveInappropriate(Long userId);
+	
+    @Query(name = "Gift.findAllByUserIdAndInappropriate", countName = "Gift.countByUserIdAndInappropriate")
+	Page<GiftDBTO> findAllByUserIdRemoveInappropriate(Long userId, Pageable pageable);
+    
+//    @Query(name = "Gift.findAllByUserIdAndInappropriateAndTitle")
+//    List<GiftDBTO> findAllByUserIdAndTitleRemoveInappropriate(Long userId, String title);
+//
+//    @Query(name = "Gift.findAllByUserIdAndInappropriateAndTitle", countName = "Gift.countByUserIdAndInappropriateAndTitle")
+//    Page<GiftDBTO> findAllByUserIdAndTitleRemoveInappropriate(Long userId, String title, Pageable pageable);
 	
 }

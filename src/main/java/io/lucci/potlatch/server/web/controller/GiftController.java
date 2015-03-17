@@ -2,8 +2,8 @@ package io.lucci.potlatch.server.web.controller;
 
 import io.lucci.potlatch.server.service.GiftManager;
 import io.lucci.potlatch.server.service.StorageServiceException;
-import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.service.exception.GiftManagerException;
+import io.lucci.potlatch.server.service.exception.GiftNotFoundExcetption;
 import io.lucci.potlatch.server.web.controller.exception.InternalServerErrorException;
 import io.lucci.potlatch.server.web.controller.exception.ResourceNotFoundException;
 import io.lucci.potlatch.server.web.controller.resolver.CurrentUser;
@@ -63,7 +63,31 @@ public class GiftController {
     }
     
     @RequestMapping(value = "/gift", method = RequestMethod.GET)
-    public @ResponseBody PaginatorResult<Gift> retrieveGifts(@CurrentUser User user, @Paginator SimplePaginator paginator) throws InternalServerErrorException {
+    public @ResponseBody PaginatorResult<Gift> retrieveGifts(@CurrentUser User user, @Paginator SimplePaginator paginator) 
+    		throws InternalServerErrorException {
+    	
+    	try {
+    		PaginatorResult<Gift> paginatorResult = null;
+    		
+			logger.info("Retrieve gifts for user [{}], paginator [{}]", paginator);
+			paginatorResult = giftManager.getGifts(user, paginator);
+    		
+    		logger.info("Found [{}] gifts", paginatorResult.getResult().size());
+    		return paginatorResult;
+    		
+		} catch (Exception e) {
+			logger.error("Unable load the gifts", e);
+			throw new InternalServerErrorException("Unable load the gifts", e);
+		}
+    }
+    
+    @RequestMapping(value = "/gift/search", method = RequestMethod.GET)
+    public @ResponseBody PaginatorResult<Gift> retrieveGiftsByTitle(
+    			@CurrentUser User user, 
+    			@Paginator SimplePaginator paginator,
+    			@RequestParam(required=true, value="title") String title
+    		) throws InternalServerErrorException {
+    	
     	try {
     		PaginatorResult<Gift> paginatorResult = null;
     		
